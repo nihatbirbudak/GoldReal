@@ -2,7 +2,10 @@
 using GR.Core.Interface;
 using GR.Infrastructure.Data;
 using GR.Infrastructure.Repositories;
+using GR.Services.Abstract.HomeService;
+using GR.Services.Home_Service;
 using GR.Services.Mapping;
+using GR.Services.Services.Home_Service;
 using Microsoft.AspNetCore.Identity;
 
 namespace WebUI.Extensions
@@ -32,6 +35,9 @@ namespace WebUI.Extensions
             service.AddScoped<IUnitOfWork, UnitOfWork>();
             // AutoMapper
             service.AddAutoMapper(typeof(AutoMapperProfile));
+            // Dependency Injection
+            service.AddScoped<IHomeBannerService, HomeBannerService>();
+            service.AddScoped<IHomeSectionService, HomeSetcionService>();
         }
 
     }

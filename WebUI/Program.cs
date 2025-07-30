@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
 //****************    Database Connetion   ***************************************************
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

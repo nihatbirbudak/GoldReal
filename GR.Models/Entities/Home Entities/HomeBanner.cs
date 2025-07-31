@@ -10,11 +10,11 @@ namespace GR.Models.Entities
 {
     public class HomeBanner : Entity<int>
     {
-        public string Title { get; set; }             // Banner başlığı
-        public string Description { get; set; }       // Kısa açıklama
-        public string LinkText { get; set; }          // Buton/metin adı
-        public string LinkUrl { get; set; }           // Link yolu
-        public string ImagePath { get; set; }         // Görsel yolu
+        public string Title { get; set; }            // Bölüm başlığı
+        public string Description { get; set; }      // Kısa açıklama
+        public string btnText { get; set; }         // Link adı
+        public string btnLink { get; set; }          // Link yolu
+        public string ImageUrl { get; set; }        // Resim URL'si
 
     }
 }

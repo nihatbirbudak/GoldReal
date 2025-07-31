@@ -30,9 +30,9 @@ namespace GR.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            // Additional model configurations can be added here
+           
+            base.OnModelCreating(builder);
         }
     }
 }

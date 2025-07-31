@@ -8,10 +8,10 @@ namespace GR.Models.DTOs.FrontendDTOs.HomeDTOs
 {
     public class HomeBannerFrontendDTO
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string LinkText { get; set; }
-        public string LinkUrl { get; set; }
-        public string ImagePath { get; set; }
+        public string Title { get; set; }            // Bölüm başlığı
+        public string Description { get; set; }      // Kısa açıklama
+        public string btnText { get; set; }         // Link adı
+        public string btnLink { get; set; }          // Link yolu
+        public string ImageUrl { get; set; }        // Resim URL'si
     }
 }

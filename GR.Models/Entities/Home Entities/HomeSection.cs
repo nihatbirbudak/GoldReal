@@ -11,7 +11,7 @@ namespace GR.Models.Entities.Home_Entities
     {
         public string Title { get; set; }            // Bölüm başlığı
         public string Description { get; set; }      // Kısa açıklama
-        public string LinkText { get; set; }         // Link adı
-        public string LinkUrl { get; set; }          // Link yolu
+        public string btnText { get; set; }         // Link adı
+        public string btnLink { get; set; }          // Link yolu
     }
 }

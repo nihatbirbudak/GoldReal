@@ -1,46 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model IndexViewModel
 
 <!-- Banner 2 start -->
 <div class="banner-2">
-    <div class="slide overlay-2" style="background-image: url('/assets/img/banner/banner-1.jpg');">
-        <div class="breadcrumb-area text-left">
-            <h2>15 Yıllık Tecrübe ile Güvenli Yatırımlar</h2>
-            <p>Gold Real olarak sadece bir mülk değil, geleceğe değer katan yatırımlar sunuyoruz.</p>
-            <a href="#" class="btn-6">Daha Fazla Bilgi</a>
-        </div>
-    </div>
-    <div class="slide overlay-2" style="background-image: url('/assets/img/banner/banner-2.jpg');">
-        <div class="breadcrumb-area">
-            <h2>Hayalinizdeki Evi Bulun</h2>
-            <p>İzmir’in en değerli bölgelerinde kazançlı gayrimenkul fırsatları sizi bekliyor.</p>
-            <a href="#" class="btn-6">Satılık İlanları İncele</a>
-        </div>
-    </div>
-    <div class="slide overlay-2" style="background-image: url('/assets/img/banner/banner-3.jpg');">
-        <div class="breadcrumb-area">
-            <h2>Doğru Yatırım, Doğru Lokasyon</h2>
-            <p>
-                Bütçenizi ve hedeflerinizi analiz ediyor, sizi en doğru yatırımla buluşturuyoruz.
-            </p>
-            <a href="#" class="btn-6">Bize Ulaşın</a>
-        </div>
-    </div>
-    @* <div class="slide overlay-2" style="background-image: url('img/banner/img-1.png');">
-        <div class="breadcrumb-area">
-            <h2>Find Your Amazing Home</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-            <a href="#" class="btn-6">Read More</a>
-        </div>
-    </div>
-    <div class="slide overlay-2" style="background-image: url('img/banner/img-5.png');">
-        <div class="breadcrumb-area">
-            <h2>Let's Take You To Your Dream Villa</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-            <a href="#" class="btn-6">Read More</a>
-        </div>
-    </div> *@
+    @foreach (var banner in Model.Banners)
+    {
+         <div class="slide overlay-2" style="background-image: url('@banner.ImageUrl');">
+            <div class="breadcrumb-area text-left">
+                <h2>@banner.Title</h2>
+                <p>@banner.Description</p>
+                <a href="@banner.btnLink" class="btn-6">@banner.btnText</a>
+            </div>
+        </div> 
+    }
+    
 </div>
 <!-- Banner 2 end -->
 

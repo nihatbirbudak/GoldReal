@@ -2,8 +2,10 @@ using GR.Core.Entities.Identity;
 using GR.Core.Interface;
 using GR.Infrastructure.Data;
 using GR.Infrastructure.Repositories;
+using GR.Services.Abstract.HomeService;
 using GR.Services.Base;
 using GR.Services.Mapping;
+using GR.Services.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 
 
 //****************    Database Connetion   ***************************************************
@@ -55,6 +58,34 @@ builder.Services.ConfigureApplicationCookie(opt =>
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // Initialize the database and seed data
+        var dbContext = services.GetRequiredService<AppDbContext>();
+        await dbContext.Database.MigrateAsync();
+        // Seed roles and users
+        var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+        await Seeder.AddRole(roleManager);
+        var userManager = services.GetRequiredService<UserManager<AppUser>>();
+        await Seeder.AddUser(userManager);
+        // Seed home sections
+        var homeSectionService = services.GetRequiredService<IHomeSectionService>();
+        await Seeder.AddHomeSections(homeSectionService);
+        // Seed home banners
+        var homeBannerService = services.GetRequiredService<IHomeBannerService>();
+        await Seeder.AddHomeBanners(homeBannerService);
+    }
+    catch (Exception ex)
+    {
+        // Handle exceptions during seeding
+        Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+    }
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

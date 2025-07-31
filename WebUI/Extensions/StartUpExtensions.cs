@@ -34,7 +34,8 @@ namespace WebUI.Extensions
             // UnitOfWork & Repository
             service.AddScoped<IUnitOfWork, UnitOfWork>();
             // AutoMapper
-            service.AddAutoMapper(typeof(AutoMapperProfile));
+            //service.AddAutoMapper(typeof(AutoMapperProfile));
+            service.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // Dependency Injection
             service.AddScoped<IHomeBannerService, HomeBannerService>();
             service.AddScoped<IHomeSectionService, HomeSetcionService>();

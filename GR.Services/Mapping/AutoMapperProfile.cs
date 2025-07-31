@@ -18,8 +18,8 @@ namespace GR.Services.Mapping
             // Example: CreateMap<Source, Destination>();
             // CreateMap<Project, ProjectDto>().ReverseMap();
             // CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<HomeBanner, HomeBannerFrontendDTO>();
-            CreateMap<HomeSection, HomeSectionFrontendDTO>();
+            CreateMap<HomeBanner, HomeBannerFrontendDTO>().ReverseMap();
+            CreateMap<HomeSection, HomeSectionFrontendDTO>().ReverseMap();
         }
     }
     

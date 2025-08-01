@@ -6601,13 +6601,12 @@ mark {
 .main-footer-2 {
     text-align: center;
     padding-top: 50px;
-    background: url(../img/footer.png);
     z-index: 0;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
-    background-color: #00183E;
+    background-color: #d6b469;
 }
 
 .main-footer-2 .footer-menu ul {
@@ -7390,7 +7389,7 @@ mark {
 /** Counters 3 start **/
 .counters-3 {
     padding: 100px 0 70px;
-    background: url(../img/img-1.png);
+    background: url(../img/gold-real-banner.jpg);
     z-index: 0;
     background-position: center center;
     background-repeat: no-repeat;
@@ -7398,17 +7397,17 @@ mark {
     position: relative;
 }
 
-.counters-3:before {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: #201297;
-    content: "";
-    z-index: -1;
-    opacity: 0.4;
-}
+    .counters-3:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        content: "";
+        z-index: -1;
+        opacity: 0.4;
+    }
 
 .counter-box-3 {
     margin-bottom: 30px;

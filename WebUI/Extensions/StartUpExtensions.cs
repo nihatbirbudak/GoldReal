@@ -44,6 +44,8 @@ namespace WebUI.Extensions
             service.AddScoped<IContactRequestService, ContactRequestService>();
             service.AddScoped<IPropertyTypeService, PropertyTypeService>();
             service.AddScoped<IHomeContactService, HomeContactService>();
+            service.AddScoped<IHomeCounterService, HomeCounterService>();
+            service.AddScoped<ICustomerReviewService, CustomerReviewService>();
 
         }
 

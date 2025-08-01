@@ -88,7 +88,7 @@
 </div>
 <!-- Services end -->
 
-
+<!--Home Contact-->
 <div class="contact-2 content-area-17 pb-200">
     <div class="container">
         <!-- Main title -->
@@ -192,6 +192,7 @@
         </form>
     </div>
 </div>
+<!--Home Contact end-->
 
 <!-- Counters 3 strat -->
 <div class="counters-3">
@@ -203,8 +204,8 @@
                         <i class="flaticon-sale"></i>
                     </div>
                     <div class="detail align-self-center">
-                        <h2 class="counter Starting">672</h2>
-                        <p>Listings For Sale</p>
+                        <h2 class="counter Starting">@Model.HomeCounter.Count1</h2>
+                        <p>@Model.HomeCounter.Description1</p>
                     </div>
                 </div>
             </div>
@@ -214,8 +215,8 @@
                         <i class="flaticon-rent"></i>
                     </div>
                     <div class="detail align-self-center">
-                        <h2 class="counter Starting">475</h2>
-                        <p>Listings For Rent</p>
+                        <h2 class="counter Starting">@Model.HomeCounter.Count2</h2>
+                        <p>@Model.HomeCounter.Description2</p>
                     </div>
                 </div>
             </div>
@@ -225,8 +226,8 @@
                         <i class="flaticon-user"></i>
                     </div>
                     <div class="detail align-self-center">
-                        <h2 class="counter Starting">705</h2>
-                        <p>Our Agents</p>
+                        <h2 class="counter Starting">@Model.HomeCounter.Count3</h2>
+                        <p>@Model.HomeCounter.Description3</p>
                     </div>
                 </div>
             </div>
@@ -236,8 +237,8 @@
                         <i class="flaticon-broker"></i>
                     </div>
                     <div class="detail align-self-center">
-                        <h2 class="counter Starting">950</h2>
-                        <p>Brokers</p>
+                        <h2 class="counter Starting">@Model.HomeCounter.Count4</h2>
+                        <p>@Model.HomeCounter.Description4</p>
                     </div>
                 </div>
             </div>
@@ -245,19 +246,20 @@
     </div>
 </div>
 <!-- Counters 3 end -->
+
 <!-- Our team start -->
 <div class="our-team content-area">
     <div class="container">
         <!-- Main title -->
         <div class="main-title-2 text-center">
-            <p class="section-subtitle">Our Professionals</p>
-            <h1>Meet Our Team</h1>
+            <p class="section-subtitle">Ekibimiz</p>
+            <h1>Uzman ekibimiz ile tanışın.</h1>
         </div>
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="team-5">
                     <div class="team-info">
-                        <img src="img/avatar/avatar-11.png" alt="agent-5" class="img-fluid w-100">
+                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid w-100">
                         <div class="overlay">
                             <div class="text-section">
                                 <div class="social-list">
@@ -283,7 +285,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="team-5">
                     <div class="team-info">
-                        <img src="img/avatar/avatar-13.png" alt="agent-5" class="img-fluid">
+                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid">
                         <div class="overlay">
                             <div class="text-section">
                                 <div class="social-list">
@@ -309,7 +311,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="team-5">
                     <div class="team-info">
-                        <img src="img/avatar/avatar-14.png" alt="agent-5" class="img-fluid">
+                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid">
                         <div class="overlay">
                             <div class="text-section">
                                 <div class="social-list">
@@ -335,7 +337,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="team-5">
                     <div class="team-info">
-                        <img src="img/avatar/avatar-12.png" alt="agent-5" class="img-fluid">
+                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid">
                         <div class="overlay">
                             <div class="text-section">
                                 <div class="social-list">
@@ -362,84 +364,52 @@
     </div>
 </div>
 <!-- Our team end -->
+
 <!-- Testimonial 5 start -->
 <div class="testimonial-5 comon-slick content-area-5">
     <div class="container">
         <!-- Main title -->
         <div class="main-title-2 text-center">
-            <p class="section-subtitle">Testimonials</p>
-            <h1>Customer Reviews</h1>
+            <p class="section-subtitle">Neden Biz?</p>
+            <h1>Müşteri Yorunları</h1>
         </div>
         <div class="slick row comon-slick-inner" data-slick='{"slidesToShow": 2, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 1}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
-            <div class="item slide-box">
-                <div class="testimonial-item-new">
-                    <div class="author-img fix">
-                        <div class="author-avatar">
-                            <img src="img/avatar/avatar-1.png" alt="testimonial-5">
-                            <div class="icon">
-                                <i class="fa fa-quote-right"></i>
+            @foreach(var customerReview in Model.CustomerReviews)
+            {
+                <div class="item slide-box">
+                    <div class="testimonial-item-new">
+                        <div class="author-img fix">
+                            <div class="author-avatar">
+                                <img src="" alt="">
+                                <div class="icon">
+                                    <i class="fa fa-quote-right"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="author-content">
-                        <h5 class="left-line pl-40">Somalia Silva, <span class="desig">Director</span></h5>
-                    </div>
-                    <p>But I must explain to you how all this mistake denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual</p>
-                    <div class="rating">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half-full"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="item slide-box">
-                <div class="testimonial-item-new">
-                    <div class="author-img fix">
-                        <div class="author-avatar">
-                            <img src="img/avatar/avatar-2.png" alt="testimonial-5">
-                            <div class="icon">
-                                <i class="fa fa-quote-right"></i>
-                            </div>
+                        <div class="author-content">
+                            <h5 class="left-line pl-40">@customerReview.Name @customerReview.Surname <span class="desig">@customerReview.TransactionType</span></h5>
+                        </div>
+                        <p>@customerReview.Comment</p>
+                        <div class="rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Floor(customerReview.Rating))
+                                {
+                                    <i class="fa fa-star"></i>
+                                }
+                                else if (i == Math.Ceiling(customerReview.Rating) && customerReview.Rating % 1 != 0)
+                                {
+                                    <i class="fa fa-star-half-full"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-star-o text-muted"></i>
+                                }
+                            }
                         </div>
                     </div>
-                    <div class="author-content">
-                        <h5 class="left-line pl-40">Michelle Nelson, <span class="desig">Consultant</span></h5>
-                    </div>
-                    <p>But I must explain to you how all this mistake denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual</p>
-                    <div class="rating">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half-full"></i>
-                    </div>
                 </div>
-            </div>
-            <div class="item slide-box">
-                <div class="testimonial-item-new">
-                    <div class="author-img fix">
-                        <div class="author-avatar">
-                            <img src="img/avatar/avatar-3.png" alt="testimonial-5">
-                            <div class="icon">
-                                <i class="fa fa-quote-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="author-content">
-                        <h5 class="left-line pl-40">Carolyn Stone, <span class="desig">Designer</span></h5>
-                    </div>
-                    <p>But I must explain to you how all this mistake denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual</p>
-                    <div class="rating">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half-full"></i>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>

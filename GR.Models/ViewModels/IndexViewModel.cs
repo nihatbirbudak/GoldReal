@@ -1,4 +1,5 @@
 ﻿using GR.Models.DTOs;
+using GR.Models.DTOs.FrontendDTOs;
 using GR.Models.DTOs.FrontendDTOs.HomeDTOs;
 using GR.Models.Entities;
 using GR.Models.Enum;
@@ -18,5 +19,7 @@ namespace GR.Models.ViewModels
         public ContactRequestDTO? ContactRequest;
         public List<RequestType>? RequestTypes;
         public HomeContactDTO? HomeContact;
+        public HomeCounterDTO? HomeCounter;
+        public List<CustomerReviewDTO>? CustomerReviews;
     }
 }

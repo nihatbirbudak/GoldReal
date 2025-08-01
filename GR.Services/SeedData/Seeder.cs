@@ -137,6 +137,65 @@ namespace GR.Services.SeedData
                 });
             }
         }
+
+        public static async Task AddHomeCounter(IHomeCounterService homeCounterService)
+        {
+            var requests = await homeCounterService.GetAllAsync();
+            if (!requests.Any())
+            {
+                await homeCounterService.AddAsync(new HomeCounter
+                {
+                    Count1="500+",
+                    Description1 = "Satış",
+                    Count2 = "420+",
+                    Description2 = "Kiralama",
+                    Count3 = "1000+",
+                    Description3 = "Mutlu Müşteri",
+                    Count4 = "15+",
+                    Description4 = "Yıllık Tecrübe",
+                });
+            }
+        }
+
+        public static async Task AddCustomerReviews(ICustomerReviewService customReviewService)
+        {
+            var reviews = await customReviewService.GetAllAsync();
+            if(!reviews.Any())
+            {
+                await customReviewService.AddAsync(new CustomerReview
+                {
+                    Name = "Ahmet",
+                    Surname= "Yılmaz",
+                    TransactionType = "Satın Alma",
+                    Comment = "Gold Real ekibi sayesinde hayalimdeki daireyi kısa sürede buldum. Tüm süreçte çok ilgilendiler ve her soruma hızlıca yanıt verdiler. Güvenilir bir ekip!",
+                    Rating = 5
+                });
+                await customReviewService.AddAsync(new CustomerReview
+                {
+                    Name = "Elif",
+                    Surname = "Demir",
+                    TransactionType = "Kiralama",
+                    Comment = "İzmir’de kiralık ev ararken çok zorlanıyordum ama Gold Real sayesinde hem uygun fiyatlı hem de tam istediğim bölgede bir ev buldum. Profesyonel destekleri için teşekkür ederim.",
+                    Rating = 4
+                });
+                await customReviewService.AddAsync(new CustomerReview
+                {
+                    Name = "Mehmet",
+                    Surname = "Kaya",
+                    TransactionType = "Satış",
+                    Comment = "Mülkümü satarken süreç çok hızlı ve sorunsuz ilerledi. Piyasa bilgileri gerçekten çok iyi, doğru yönlendirmeler yaptılar. Kazançlı bir satış oldu.",
+                    Rating = 5
+                });
+                await customReviewService.AddAsync(new CustomerReview
+                {
+                    Name = "Zeynep",
+                    Surname = "Arslan",
+                    TransactionType = "Yatırım",
+                    Comment = "Yatırım amaçlı arsa alırken bana çok yardımcı oldular. Tüm prosedürleri detaylıca anlattılar ve doğru yönlendirdiler. Gözüm kapalı tavsiye ederim.",
+                    Rating = 4
+                });
+            }
+        }
     }
 }
     

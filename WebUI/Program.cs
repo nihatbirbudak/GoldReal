@@ -85,6 +85,12 @@ using (var scope = app.Services.CreateScope())
         // Seed Home Contact
         var homeContactService = services.GetRequiredService<IHomeContactService>();
         await Seeder.AddHomeContact(homeContactService);
+        // Seed Counter
+        var counterService = services.GetRequiredService<IHomeCounterService>();
+        await Seeder.AddHomeCounter(counterService);
+        // Seed Customer Reviews
+        var customerReviewService = services.GetRequiredService<ICustomerReviewService>();
+        await Seeder.AddCustomerReviews(customerReviewService);
     }
     catch (Exception ex)
     {

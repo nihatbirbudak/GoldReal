@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GR.Models.DTOs;
+using GR.Models.DTOs.FrontendDTOs;
 using GR.Models.DTOs.FrontendDTOs.HomeDTOs;
 using GR.Models.Entities;
 using GR.Models.Entities.Home_Entities;
@@ -24,6 +25,8 @@ namespace GR.Services.Mapping
             CreateMap<ContactRequest, ContactRequestDTO>().ReverseMap();
             CreateMap<PropertyType, PropertyTypeDTO>().ReverseMap();
             CreateMap<HomeContact, HomeContactDTO>().ReverseMap();
+            CreateMap<HomeCounter, HomeCounterDTO>().ReverseMap();
+            CreateMap<CustomerReview, CustomerReviewDTO>().ReverseMap();
         }
     }
     

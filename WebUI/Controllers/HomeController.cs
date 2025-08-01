@@ -1,5 +1,6 @@
 using AutoMapper;
 using GR.Models.DTOs;
+using GR.Models.DTOs.FrontendDTOs;
 using GR.Models.DTOs.FrontendDTOs.HomeDTOs;
 using GR.Models.Enum;
 using GR.Models.ViewModels;
@@ -22,8 +23,17 @@ namespace WebUI.Controllers
         private readonly IPropertyTypeService _propertyTypeService;
         private readonly IContactRequestService _contactRequestService;
         private readonly IHomeContactService _homeContactService;
+        private readonly ICustomerReviewService _customerReviewService;
+        private readonly IHomeCounterService _homeCounterService;
 
-        public HomeController(ILogger<HomeController> logger, IHomeSectionService sectionService, IHomeBannerService bannerService, IMapper mapper, IPropertyTypeService propertyTypeService, IContactRequestService contactRequestService, IHomeContactService homeContactService)
+        public HomeController(ILogger<HomeController> logger, 
+            IHomeSectionService sectionService,
+            IHomeBannerService bannerService, IMapper mapper,
+            IPropertyTypeService propertyTypeService,
+            IContactRequestService contactRequestService,
+            IHomeContactService homeContactService,
+            ICustomerReviewService customerReviewService, 
+            IHomeCounterService homeCounterService)
         {
             _logger = logger;
             _sectionService = sectionService;
@@ -32,6 +42,8 @@ namespace WebUI.Controllers
             _propertyTypeService = propertyTypeService;
             _contactRequestService = contactRequestService;
             _homeContactService = homeContactService;
+            _customerReviewService = customerReviewService;
+            _homeCounterService = homeCounterService;
         }
 
         public async Task<IActionResult> Index()
@@ -48,6 +60,12 @@ namespace WebUI.Controllers
             var homeContact = await _homeContactService.GetAsync();
             var homeContactDTO = _mapper.Map<HomeContactDTO>(homeContact);
 
+            var homeCounter = await _homeCounterService.GetAsync();
+            var homeCounterDTO = _mapper.Map<HomeCounterDTO>(homeCounter);
+
+            var customerRewviews = await _customerReviewService.GetAllAsync();
+            var customerRewviewsDTO = _mapper.Map<List<CustomerReviewDTO>>(customerRewviews);
+
 
 
             var model = new IndexViewModel
@@ -58,7 +76,8 @@ namespace WebUI.Controllers
                 RequestTypes = Enum.GetValues(typeof(RequestType))
                     .Cast<RequestType>().ToList(),
                 HomeContact = homeContactDTO,
-
+                HomeCounter = homeCounterDTO,
+                CustomerReviews = customerRewviewsDTO
             };
 
             return View(model);

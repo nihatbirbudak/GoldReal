@@ -1,6 +1,7 @@
 ﻿using GR.Core.Entities.Identity;
 using GR.Models.Entities;
 using GR.Models.Entities.Home_Entities;
+using GR.Services.Abstract;
 using GR.Services.Abstract.HomeService;
 using GR.Services.Services.Home_Service;
 using Microsoft.AspNetCore.Identity;
@@ -105,6 +106,38 @@ namespace GR.Services.SeedData
             }
         }
 
+        public static async Task AddPropertyTypes(IPropertyTypeService propertyTypeService)
+        {
+            var propertyTypes = await propertyTypeService.GetAllAsync();
+            if (!propertyTypes.Any())
+            {
+                await propertyTypeService.AddAsync(new PropertyType { Name = "Daire" });
+                await propertyTypeService.AddAsync(new PropertyType { Name = "Villa" });
+                await propertyTypeService.AddAsync(new PropertyType { Name = "Arsa" });
+                await propertyTypeService.AddAsync(new PropertyType { Name = "Ofis" });
+                await propertyTypeService.AddAsync(new PropertyType { Name = "Tarla" });
+                await propertyTypeService.AddAsync(new PropertyType { Name = "Fabrika/Depo" });
+            }
+        }
 
+        public static async Task AddHomeContact(IHomeContactService homeContactService)
+        {
+            var contacts = await homeContactService.GetAllAsync();
+            if (!contacts.Any())
+            {
+                await homeContactService.AddAsync(new HomeContact
+                {
+                    Title = "Hayalinizdeki Villaya Ulaşmanın En Kısa Yolu!",
+                    Description = "Villa satın almak ya da mevcut villanızı satmak istiyorsunuz ama nereden başlayacağınızı bilmiyor musunuz? Siz hayalinize odaklanın, biz 10 yılı aşkın tecrübemizle bütçenize ve ihtiyaçlarınıza en uygun çözümleri bulalım.",
+                    Title2 = "Satın Alma ve Satış Sürecinde Güvenilir Rehberiniz",
+                    Description2 = "Villa almak, yalnızca bir mülk sahibi olmak değil; aynı zamanda yaşam tarzınızı değiştirmek demektir. Ancak bu süreçte doğru lokasyonu bulmak, bütçenize uygun fiyatlandırma yapmak ve yasal süreçleri sorunsuz yönetmek kolay değildir. Biz, yılların verdiği deneyimle ihtiyaçlarınızı analiz eder, size en uygun villayı en güvenilir şekilde sunarız.",
+                    title3 = "Doğru Yatırım İçin Doğru Adres",
+                    Description3 = "Yeni bir villa satın almak mı istiyorsunuz? Sizin için onlarca seçeneği değerlendirir, piyasayı analiz eder ve bütçenize en uygun fırsatları belirleriz. Üstelik sadece evi değil, yaşamak istediğiniz hayatı da birlikte tasarlarız.",
+
+                });
+            }
+        }
     }
 }
+    
+

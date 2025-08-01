@@ -2,6 +2,7 @@ using GR.Core.Entities.Identity;
 using GR.Core.Interface;
 using GR.Infrastructure.Data;
 using GR.Infrastructure.Repositories;
+using GR.Services.Abstract;
 using GR.Services.Abstract.HomeService;
 using GR.Services.Base;
 using GR.Services.Mapping;
@@ -78,6 +79,12 @@ using (var scope = app.Services.CreateScope())
         // Seed home banners
         var homeBannerService = services.GetRequiredService<IHomeBannerService>();
         await Seeder.AddHomeBanners(homeBannerService);
+        // Seed property types
+        var propertyTypeService = services.GetRequiredService<IPropertyTypeService>();
+        await Seeder.AddPropertyTypes(propertyTypeService);
+        // Seed Home Contact
+        var homeContactService = services.GetRequiredService<IHomeContactService>();
+        await Seeder.AddHomeContact(homeContactService);
     }
     catch (Exception ex)
     {

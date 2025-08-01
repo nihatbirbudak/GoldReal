@@ -2535,7 +2535,13 @@ input[type=checkbox]:checked + label:before {
 /** Contact 2 start **/
 .contact-2{
     z-index: 999;
+
 }
+
+.pb-200{
+    padding-bottom: 200px;
+}
+
 
 .contact-2 .form-control {
     padding: 10px 17px;
@@ -8502,7 +8508,7 @@ margin-top: 30px;
 }
 
 .content-area-17 {
-    padding-top: 100px;
+    padding-top: 70px;
 }
 
 

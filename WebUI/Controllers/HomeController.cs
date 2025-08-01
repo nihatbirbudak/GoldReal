@@ -1,7 +1,11 @@
 using AutoMapper;
+using GR.Models.DTOs;
 using GR.Models.DTOs.FrontendDTOs.HomeDTOs;
+using GR.Models.Enum;
 using GR.Models.ViewModels;
+using GR.Services.Abstract;
 using GR.Services.Abstract.HomeService;
+using GR.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -15,13 +19,19 @@ namespace WebUI.Controllers
         private readonly IHomeBannerService _bannerService;
         private readonly IHomeSectionService _sectionService;
         private readonly IMapper _mapper;
+        private readonly IPropertyTypeService _propertyTypeService;
+        private readonly IContactRequestService _contactRequestService;
+        private readonly IHomeContactService _homeContactService;
 
-        public HomeController(ILogger<HomeController> logger, IHomeSectionService sectionService, IHomeBannerService bannerService,IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, IHomeSectionService sectionService, IHomeBannerService bannerService, IMapper mapper, IPropertyTypeService propertyTypeService, IContactRequestService contactRequestService, IHomeContactService homeContactService)
         {
             _logger = logger;
             _sectionService = sectionService;
             _bannerService = bannerService;
             _mapper = mapper;
+            _propertyTypeService = propertyTypeService;
+            _contactRequestService = contactRequestService;
+            _homeContactService = homeContactService;
         }
 
         public async Task<IActionResult> Index()
@@ -32,10 +42,23 @@ namespace WebUI.Controllers
             var sectionList = await _sectionService.GetAllAsync();
             var sectionListDTO = _mapper.Map<List<HomeSectionFrontendDTO>>(sectionList);
 
+            var propertyType = await _propertyTypeService.GetAllAsync();
+            var propertyTypeDTO = _mapper.Map<List<PropertyTypeDTO>>(propertyType);
+
+            var homeContact = await _homeContactService.GetAsync();
+            var homeContactDTO = _mapper.Map<HomeContactDTO>(homeContact);
+
+
+
             var model = new IndexViewModel
             {
                 Banners = bannerListDTO,
-                Sections = sectionListDTO
+                Sections = sectionListDTO,
+                PropertyTypes = propertyTypeDTO,
+                RequestTypes = Enum.GetValues(typeof(RequestType))
+                    .Cast<RequestType>().ToList(),
+                HomeContact = homeContactDTO,
+
             };
 
             return View(model);

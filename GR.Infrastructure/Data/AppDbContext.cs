@@ -26,6 +26,9 @@ namespace GR.Infrastructure.Data
 
         public virtual DbSet<HomeBanner> HomeBanners { get; set; }
         public virtual DbSet<HomeSection> HomeSection { get; set; }
+        public virtual DbSet<ContactRequest> ContactRequests { get; set; }
+        public virtual DbSet<PropertyType> PropertyTypes { get; set; }
+        public virtual DbSet<HomeContact> HomeContacts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

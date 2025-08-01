@@ -2,9 +2,11 @@
 using GR.Core.Interface;
 using GR.Infrastructure.Data;
 using GR.Infrastructure.Repositories;
+using GR.Services.Abstract;
 using GR.Services.Abstract.HomeService;
 using GR.Services.Home_Service;
 using GR.Services.Mapping;
+using GR.Services.Services;
 using GR.Services.Services.Home_Service;
 using Microsoft.AspNetCore.Identity;
 
@@ -39,6 +41,10 @@ namespace WebUI.Extensions
             // Dependency Injection
             service.AddScoped<IHomeBannerService, HomeBannerService>();
             service.AddScoped<IHomeSectionService, HomeSetcionService>();
+            service.AddScoped<IContactRequestService, ContactRequestService>();
+            service.AddScoped<IPropertyTypeService, PropertyTypeService>();
+            service.AddScoped<IHomeContactService, HomeContactService>();
+
         }
 
     }

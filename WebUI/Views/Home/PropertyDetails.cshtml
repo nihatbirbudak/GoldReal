@@ -1,0 +1,236 @@
+﻿@model PropertyDetailViewModel
+
+@functions {
+    string Normalize(string? path) => Url.Content("~/" + (path ?? "").TrimStart('~', '/'));
+    string Money(decimal? d, string cur) => d.HasValue ? d.Value.ToString("N0") + " " + cur : "-";
+    string M2(int? n) => n.HasValue ? n.Value + " m²" : "-";
+}
+
+@{
+    string GetSimilarCover(int propId)
+    {
+        // ilgili property's cover fotoğrafını çek
+        var cover = Model.SmilarPhotos
+            ?.FirstOrDefault(z => z.PropertyId == propId && z.IsCover)
+            ?? Model.SmilarPhotos
+                ?.FirstOrDefault(z => z.PropertyId == propId);
+
+        // eğer hiçbir foto yoksa fallback resim
+        if (cover == null || string.IsNullOrWhiteSpace(cover.Url))
+        {
+            return Url.Content("~/assets/img/properties/properties-1.png");
+        }
+
+        // varsa normalize et (başında ~ yoksa ekleyelim)
+        return Url.Content("~/" + cover.Url.TrimStart('~', '/'));
+    }
+}
+
+<!-- Properties details page start -->
+<div class="properties-details-page content-area">
+    <div class="container">
+        <div class="row">
+            <!-- SOL SÜTUN -->
+            <div class="col-lg-8 col-md-12">
+                <!-- Başlık + Fiyat -->
+                <div class="heading-properties-3">
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <h1>@Model.Title</h1>
+                        </div>
+                        <div class="pull-right">
+                            <h1><span>@Money(Model.Price, Model.Currency)</span></h1>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <p>
+                                <i class="flaticon-pin"></i>
+                                @Model.AddressLine, @Model.NeighborhoodName @Model.DistrictName / @Model.CityName
+                            </p>
+                        </div>
+                        <div class="pull-right">
+                            @{
+                                string perM2 = "-";
+                                if (Model.Price.HasValue && Model.GrossM2.GetValueOrDefault() > 0)
+                                {
+                                    var val = Model.Price.Value / (Model.GrossM2.Value == 0 ? 1 : Model.GrossM2.Value);
+                                    perM2 = val.ToString("N0") + " " + Model.Currency + " / m²";
+                                }
+                            }
+                            <p><span>@perM2</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDER -->
+                <div class="product-slider-box cds-2 clearfix mb-40">
+                    <div class="product-img-slide">
+                        <div class="slider-for">
+                            @if (Model.Photos != null && Model.Photos.Any())
+                            {
+                                foreach (var ph in Model.Photos)
+                                {
+                                    <img src="@Normalize(ph.Url)" class="img-fluid w-100" alt="slider-photo">
+                                }
+                            }
+                            else
+                            {
+                                <img src="~/assets/img/properties/properties-1.png" class="img-fluid w-100" alt="slider-photo">
+                                <img src="~/assets/img/properties/properties-2.png" class="img-fluid w-100" alt="slider-photo">
+                                <img src="~/assets/img/properties/properties-3.png" class="img-fluid w-100" alt="slider-photo">
+                            }
+                        </div>
+
+                        <div class="slider-nav">
+                            @if (Model.Photos != null && Model.Photos.Any())
+                            {
+                                foreach (var ph in Model.Photos)
+                                {
+                                    <div class="thumb-slide"><img src="@Normalize(ph.Url)" alt="small-photo"></div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="thumb-slide"><img src="~/assets/img/properties/properties-1.png" alt="small-photo"></div>
+                                <div class="thumb-slide"><img src="~/assets/img/properties/properties-2.png" alt="small-photo"></div>
+                                <div class="thumb-slide"><img src="~/assets/img/properties/properties-3.png" alt="small-photo"></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Açıklama -->
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <div class="properties-description mb-40">
+                        <h3 class="heading-2">Açıklama</h3>
+                        <p>@Model.Description</p>
+                    </div>
+                }
+
+                <!-- Özellikler -->
+                <div class="properties-amenities mb-40">
+                    <h3 class="heading-2">Özellikler</h3>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <ul class="amenities">
+                                <li><i class="fa fa-check"></i> @("İşlem: " + (Model.TransactionTypeName ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Kategori: " + (Model.CategoryName ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Alt Tür: " + (Model.SubtypeName ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Brüt: " + M2(Model.GrossM2))</li>
+                                <li><i class="fa fa-check"></i> @("Net: " + (Model.NetM2.HasValue ? (Model.NetM2 + " m²") : "-"))</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <ul class="amenities">
+                                <li><i class="fa fa-check"></i> @("Oda Planı: " + (Model.RoomPlan ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Banyo: " + (Model.BathroomCount ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Kat: " + (Model.Floor ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Toplam Kat: " + (Model.TotalFloors ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Bina Yaşı: " + (Model.BuildingAge ?? "-"))</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <ul class="amenities">
+                                <li><i class="fa fa-check"></i> @("Eşyalı: " + (Model.IsFurnished.HasValue ? (Model.IsFurnished.Value ? "Evet" : "Hayır") : "-"))</li>
+                                <li><i class="fa fa-check"></i> @("Isıtma: " + (Model.Heating ?? "-"))</li>
+                                <li><i class="fa fa-check"></i> @("İlan No: " + Model.ListingNo)</li>
+                                <li><i class="fa fa-check"></i> @("Durum: " + (Model.IsSold ? "Satıldı" : (Model.IsActive ? "Yayında" : "Pasif")))</li>
+                                <li><i class="fa fa-check"></i> @("Adres Notu: " + (Model.AddressNote ?? "-"))</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- (İstersen) Plan Tablosu basitleştirilmiş -->
+                <div class="floor-plans mb-50">
+                    <h3 class="heading-2">Özet</h3>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><strong>Brüt</strong></td>
+                                <td><strong>Net</strong></td>
+                                <td><strong>Oda</strong></td>
+                                <td><strong>Banyo</strong></td>
+                            </tr>
+                            <tr>
+                                <td>@M2(Model.GrossM2)</td>
+                                <td>@(Model.NetM2.HasValue ? (Model.NetM2 + " m²") : "-")</td>
+                                <td>@(Model.RoomPlan ?? "-")</td>
+                                <td>@(Model.BathroomCount ?? "-")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Benzer İlanlar -->
+                @if (Model.Similar != null && Model.Similar.Any())
+                {
+                    <h3 class="heading-2">Benzer İlanlar</h3>
+
+                    <div class="row similar-properties">
+                        @foreach (var s in Model.Similar)
+                        {
+                            <div class="col-md-6">
+                                <div class="property-box">
+                                    <div class="property-photo">
+                                        <a href="@Url.Action("PropertyDetails", "Home", new { id = s.Id })" class="property-img">
+                                            <div class="price-box">
+                                                <span>@s.Price.ToString("N0") @s.Currency</span>
+                                            </div>
+
+                                            <img class="d-block w-100"
+                                                 src="@GetSimilarCover(s.Id)"
+                                                 alt="properties" />
+                                        </a>
+                                    </div>
+
+                                    <div class="detail">
+                                        <h1 class="title">
+                                            <a href="@Url.Action("PropertyDetails", "Home", new { id = s.Id })">@s.Title</a>
+                                        </h1>
+
+                                        <div class="location">
+                                            <a href="@Url.Action("PropertyDetails", "Home", new { id = s.Id })">
+                                                <i class="flaticon-pin"></i>
+                                                @s.AddressLine, @s.DistrictName / @s.CityName
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li><span>Brüt</span> @s.GrossM2 m²</li>
+                                        <li><span>Durum</span> @s.TransactionTypeName</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- SAĞ SÜTUN -->
+            <div class="col-lg-4 col-md-12">
+                <div class="sidebar-right">
+                    <!-- İstersen burada 'Recent Properties' kısmını da dinamik hale getirebiliriz -->
+                    <div class="widget social-links">
+                        <h3 class="sidebar-title">Sosyal Medya</h3>
+                        <div class="s-border"></div>
+                        <div class="m-border"></div>
+                        <ul class="social-list clearfix">
+                            <li><a href="#" class="facebook-bg"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#" class="twitter-bg"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#" class="google-bg"><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href="#" class="linkedin-bg"><i class="fa fa-linkedin"></i></a></li>
+                            <li><a href="#" class="pinterest-bg"><i class="fa fa-pinterest"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Danışman/İletişim vb. alanlarını burada kurgulayabiliriz -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Properties details page end -->

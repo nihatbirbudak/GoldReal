@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    @await Html.PartialAsync("~/Views/Shared/_Head.cshtml")
+
+    @await RenderSectionAsync("styles", required: false)
+
+</head>
+<body>
+
+    <!-- Begin page -->
+    <div id="page-wrapper">
+        <header class="site-header header-style-1">
+            @await Html.PartialAsync("~/Views/Shared/_Menu.cshtml")
+            @await RenderSectionAsync("slider", required: false)
+        </header>
+        <!--Page Content-->
+        <!-- Dashbord start -->
+        <div class="dashboard d-flex">
+            <div class="container-fluid">
+                <div class="row">
+                    @await Html.PartialAsync("~/Views/Shared/_AdminSidebar.cshtml")
+                    <div class="dashboard-content">
+                        @RenderBody()
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p class="sub-banner-2 text-center">This admin panel design is licensed for use by Gold Real. All rights reserved by ©You Meyda</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dashbord end -->
+       
+        <!-- End Page-content -->
+        @* <!-- Footer -->
+        @await Html.PartialAsync("~/Views/Shared/_footer.cshtml")
+        <!-- end Footer--> *@
+
+    </div>
+    <!-- END layout-wrapper -->
+    @await Html.PartialAsync("~/Views/Shared/_ScriptePage.cshtml")
+
+
+    @await RenderSectionAsync("Gallery", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("ScriptsVl", required: false)
+</body>
+</html>

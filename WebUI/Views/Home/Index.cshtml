@@ -5,6 +5,39 @@
 @section ScriptsVl
 {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (function () {
+          function setupTeamCarousel() {
+            const prevBtn = document.querySelector('.our-team .team-nav.prev');
+            const nextBtn = document.querySelector('.our-team .team-nav.next');
+            if (!prevBtn || !nextBtn) return;
+
+            const targetSelector = prevBtn.getAttribute('data-target') || '#teamScroller';
+            const scroller = document.querySelector(targetSelector);
+            if (!scroller) return;
+
+            const scrollByViewport = (dir = 1) => {
+              const amount = scroller.clientWidth * 0.95;
+              scroller.scrollBy({ left: dir * amount, behavior: 'smooth' });
+            };
+
+            prevBtn.addEventListener('click', () => scrollByViewport(-1));
+            nextBtn.addEventListener('click', () => scrollByViewport(1));
+
+            const toggleArrows = () => {
+              const maxScroll = scroller.scrollWidth - scroller.clientWidth - 1;
+              prevBtn.disabled = scroller.scrollLeft <= 0;
+              nextBtn.disabled = scroller.scrollLeft >= maxScroll;
+              prevBtn.style.opacity = prevBtn.disabled ? .4 : 1;
+              nextBtn.style.opacity = nextBtn.disabled ? .4 : 1;
+            };
+            scroller.addEventListener('scroll', toggleArrows, { passive: true });
+            window.addEventListener('resize', toggleArrows);
+            toggleArrows();
+          }
+          document.addEventListener('DOMContentLoaded', setupTeamCarousel);
+        })();
+    </script>
 }
 
 <!-- Banner 2 start -->
@@ -247,124 +280,61 @@
 </div>
 <!-- Counters 3 end -->
 
-<!-- Our team start -->
-<div class="our-team content-area">
-    <div class="container">
-        <!-- Main title -->
-        <div class="main-title-2 text-center">
-            <p class="section-subtitle">Ekibimiz</p>
-            <h1>Uzman ekibimiz ile tanışın.</h1>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="team-5">
-                    <div class="team-info">
-                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid w-100">
-                        <div class="overlay">
-                            <div class="text-section">
-                                <div class="social-list">
-                                    <i class="fa fa-facebook"></i>
-                                    <i class="fa fa-twitter"></i>
-                                    <i class="fa fa-google"></i>
-                                </div>
-                                <a href="agent-detail.html" class="btn btn-primary">Meet Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="team-box">
-                        <div class="team-details">
-                            <i class="fa fa-user user"></i>
-                            <div>
-                                <h4>Gloria E Smith</h4>
-                                <p>Creative Director</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+@if (Model.Users.Count() > 0)
+{
+    <!-- Our team start -->
+    <div class="our-team content-area">
+        <div class="container">
+            <!-- Main title -->
+            <div class="main-title-2 text-center">
+                <p class="section-subtitle">Ekibimiz</p>
+                <h1>Uzman ekibimiz ile tanışın.</h1>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="team-5">
-                    <div class="team-info">
-                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid">
-                        <div class="overlay">
-                            <div class="text-section">
-                                <div class="social-list">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-google"></i></a>
+            <div class="team-carousel">
+
+                <button class="team-nav prev" type="button" aria-label="Geri" data-target="#teamScroller">‹</button>
+
+                <div class="row" id="teamScroller">
+                    @foreach (var u in Model.Users!)
+                    {
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="team-5">
+                                <div class="team-info">
+                                    @if (u.PicturePath == null)
+                                    {
+                                        <img src="~/assets/img/avatar/avatar-9.png" alt="agent-5" class="img-fluid w-100">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/assets/img/UserPic/@u.PicturePath" alt="agent-5" class="img-fluid w-100">
+                                    }
                                 </div>
-                                <a href="agent-detail.html" class="btn btn-primary">Meet Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="team-box">
-                        <div class="team-details">
-                            <i class="fa fa-user user"></i>
-                            <div>
-                                <h4>Karen Paran</h4>
-                                <p>Web Developer</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="team-5">
-                    <div class="team-info">
-                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid">
-                        <div class="overlay">
-                            <div class="text-section">
-                                <div class="social-list">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-google"></i></a>
+                                <div class="team-box">
+                                    <div class="team-details">
+                                        <i class="fa fa-user user"></i>
+                                        <div>
+                                            <h4>@u.FullName</h4>
+                                            <p>@u.EmployeeStatus</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <a href="agent-detail.html" class="btn btn-primary">Meet Now</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="team-box">
-                        <div class="team-details">
-                            <i class="fa fa-user user"></i>
-                            <div>
-                                <h4>Paran Karen</h4>
-                                <p>Web Developer</p>
-                            </div>
-                        </div>
-                    </div>
+                    }
+
+
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="team-5">
-                    <div class="team-info">
-                        <img src="~/assets/img/avatar/avatar.jpg" alt="agent-5" class="img-fluid">
-                        <div class="overlay">
-                            <div class="text-section">
-                                <div class="social-list">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-google"></i></a>
-                                </div>
-                                <a href="agent-detail.html" class="btn btn-primary">Meet Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="team-box">
-                        <div class="team-details">
-                            <i class="fa fa-user user"></i>
-                            <div>
-                                <h4>Martin Smith</h4>
-                                <p>Office Manager</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                <button class="team-nav next" type="button" aria-label="İleri" data-target="#teamScroller">›</button>
             </div>
         </div>
     </div>
-</div>
-<!-- Our team end -->
+    <!-- Our team end -->
+}
 
+
+@if (Model.CustomerReviews.Count() > 0)
+{
 <!-- Testimonial 5 start -->
 <div class="testimonial-5 comon-slick content-area-5">
     <div class="container">
@@ -414,4 +384,5 @@
     </div>
 </div>
 <!-- Testimonial 5 end -->
+}
 

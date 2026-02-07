@@ -37,6 +37,139 @@ Version:    1.1.0
 -------------------------------------------------------------------*/
 /** Global classes**/
 
+/* ===============================
+   TEAM CAROUSEL – FINAL VERSION
+   =============================== */
+
+#corporate {
+    margin-top: 50px;
+}
+
+.property-box-3 {
+    position: relative;
+    overflow: hidden;
+}
+
+    .property-box-3 .property-label {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: #D6B469; /* canlı sarı */
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        z-index: 5;
+        letter-spacing: 0.5px;
+        transition: background-color .3s ease;
+    }
+
+    .property-box-3:hover .property-label {
+        background-color: #222; /* hover durumunda kontrast */
+    }
+
+/* Sarmalayıcı (okların doğru konumlanması için) */
+.team-carousel {
+    position: relative;
+}
+
+/* Yatay kaydırma + smooth + snap */
+#teamScroller {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    gap: var(--bs-gutter-x, 1.5rem);
+    padding-bottom: .5rem;
+    /* Kenarlarda şık maske efekti */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+    /* Scrollbar'ı gizle */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Her kartı snap noktası yap */
+#teamScroller > [class*="col-"] {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+}
+
+/* ==========================================
+   OK BUTONLARI – Kare, beyaz; ok sarı.
+   Hover: sarı arka plan, beyaz ok.
+   ========================================== */
+.our-team .team-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    /* Boyut ve kare form */
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    /* Renkler */
+    background: #fff;
+    color: #D6B469;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 44px;
+    text-align: center;
+    /* Efektler */
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: background .25s ease, color .25s ease, box-shadow .25s ease, opacity .25s ease;
+}
+
+    /* Hover efekti */
+    .our-team .team-nav:hover {
+        background: #D6B469;
+        color: #fff;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Sol ve sağ buton konumu (biraz dışarı taşırıldı) */
+    .our-team .team-nav.prev {
+        left: -100px; /* dışa taşma miktarı */
+    }
+
+    .our-team .team-nav.next {
+        right: -100px; /* dışa taşma miktarı */
+    }
+
+    /* Devre dışı durumda */
+    .our-team .team-nav:disabled {
+        opacity: .4;
+        cursor: default;
+        box-shadow: none;
+    }
+
+/* Küçük ekranlarda butonlar içeri gelsin */
+@media (max-width: 992px) {
+    .our-team .team-nav.prev {
+        left: 0;
+    }
+
+    .our-team .team-nav.next {
+        right: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .our-team .team-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        line-height: 40px;
+    }
+}
+
+
 a{
     font-weight: inherit;
 }
@@ -81,6 +214,10 @@ a {
 a:hover {
     color: #525252;
     text-decoration: none;
+}
+
+.col-gld {
+    color: #d6b469;
 }
 
 p {
@@ -2533,9 +2670,10 @@ input[type=checkbox]:checked + label:before {
 }
 
 /** Contact 2 start **/
-.contact-2{
-    z-index: 999;
-
+.contact-2 {
+    position: relative;
+    z-index: 2;
+    margin-bottom: -100px; /* 👈 bindirme azaltıldı */
 }
 
 .pb-200{
@@ -2603,8 +2741,15 @@ input[type=checkbox]:checked + label:before {
     margin-bottom: 60px;
 }
 
+/* Okunaklılık */
+.contact-form,
+.contact-info {
+    background: #fff;
+}
+
 .contact-map {
-    height: 450px !important;
+    height: 600px !important;
+    margin-top: 80px; /* 👈 harita aşağıdan başlar */
 }
 
 .contact-2-map .contact-map {
@@ -3138,17 +3283,17 @@ input[type=checkbox]:checked + label:before {
     border-radius: 5px;
 }
 
-.property-box-3:before {
-    content: "";
-    top: 0;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    z-index: 0;
-    background: linear-gradient(to top,rgb(30 57 133 / 92%) 0%,rgb(38 57 181 / 35%) 35%,rgba(2, 2, 2, 0) 60%,rgba(0,0,0,0) 100%);
-    border-radius: 4px 4px 0 0;
-    opacity: 1;
-}
+    .property-box-3:before {
+        content: "";
+        top: 0;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        background: linear-gradient(to top,rgb(214 180 105 / 92%) 0%,rgb(214 180 105 / 35%) 35%,rgba(214, 180, 105, 0) 60%,rgba(0,0,0,0) 100%);
+        border-radius: 4px 4px 0 0;
+        opacity: 1;
+    }
 
 .property-box-3 h3 {
     -webkit-transition: .4s;
@@ -4455,7 +4600,7 @@ mark {
 }
 
 .team-2:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgb(214 180 105 / 35%);
     transition: 0.6s cubic-bezier(0.24, 0.74, 0.58, 1);
 }
 
@@ -4524,13 +4669,13 @@ mark {
     transition: all 0.6s ease;
 }
 
-.team-2 .photo:hover .photo::before, .team-2:hover .photo::after {
-    width: 100%;
-    height: 100%;
-    opacity: 0.7;
-    visibility: visible;
-    background: linear-gradient(0,#2168ff,rgb(255 171 74 / 17%));
-}
+    .team-2 .photo:hover .photo::before, .team-2:hover .photo::after {
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+        visibility: visible;
+        background: linear-gradient(0,#D6B469,rgb(214 180 105 / 35%));
+    }
 
 .team-2 .detail .contact {
     margin-bottom: 20px;
@@ -8082,7 +8227,6 @@ mark {
 .comment-content {
     padding-bottom: 10px;
     border-bottom: dashed 1px #d6d6d6;
-    margin: 0 0 0 77px;
 }
 
 .mrg-bdr {
@@ -8508,6 +8652,24 @@ margin-top: 30px;
 
 .content-area-17 {
     padding-top: 70px;
+}
+
+.content-area-18 {
+    padding-top: 100px;
+}
+
+
+.bg-cover {
+    min-height: 400px;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.col-lg-6 img {
+    height: 100%;
+    object-fit: cover;
 }
 
 
@@ -13022,6 +13184,138 @@ margin-top: 30px;
 
 }
 
+.dropzone {
+    border: 2px dashed #ced4da;
+    border-radius: 16px;
+    min-height: 160px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,0));
+    transition: border-color .2s,background .2s
+}
 
+    .dropzone.dragover {
+        border-color: #0d6efd;
+        background: rgba(13,110,253,.05)
+    }
 
+.dz-inner {
+    text-align: center;
+    padding: 24px
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 14px
+}
+
+@media (max-width:1400px) {
+
+    .photo-grid {
+        grid-template-columns: repeat(4,1fr)
+    }
+}
+
+@media (max-width:992px) {
+    .photo-grid {
+        grid-template-columns: repeat(3,1fr)
+    }
+}
+
+@media (max-width:768px) {
+    .photo-grid {
+        grid-template-columns: repeat(2,1fr)
+    }
+}
+
+@media (max-width:480px) {
+    .photo-grid {
+        grid-template-columns: 1fr
+    }
+}
+
+.photo-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    background: #fff
+}
+
+    .photo-card img {
+        width: 100%;
+        height: 190px;
+        object-fit: cover;
+        display: block
+    }
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center
+}
+
+.badge-ribbon {
+    position: absolute;
+    top: 12px;
+    left: -35px;
+    background: #198754;
+    color: #fff;
+    padding: 6px 40px;
+    transform: rotate(-45deg);
+    font-size: 12px;
+    letter-spacing: .5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.15)
+}
+
+.progress-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.35);
+    color: #fff
+}
+
+    .progress-overlay .bar {
+        width: 70%;
+        height: 8px;
+        background: rgba(255,255,255,.35);
+        border-radius: 6px;
+        overflow: hidden
+    }
+
+        .progress-overlay .bar > div {
+            height: 100%;
+            width: 0;
+            background: #0d6efd;
+            transition: width .1s
+        }
+
+/* Anchor offset — sabit header nedeniyle hedeflerin üstten kapanmasını engelle */
+:root {
+    --header-offset: 110px; /* header yüksekliğine göre ayarlayın */
+}
+
+/* Tarayıcı tabanlı fragment scroll için global offset */
+html {
+    scroll-padding-top: var(--header-offset);
+}
+
+/* Belirli bölümler için kesin offset (About sayfasındaki id'ler) */
+#corporate,
+#why-us {
+    scroll-margin-top: var(--header-offset);
+}
+
+/* Mobilde header yüksekliği farklı ise küçültün */
+@media (max-width: 768px) {
+    :root {
+        --header-offset: 80px;
+    }
+}
 

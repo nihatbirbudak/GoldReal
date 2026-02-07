@@ -1,0 +1,47 @@
+﻿@model AgentListViewModel
+
+<!-- Our team start -->
+<div class="our-team content-area">
+    <div class="container">
+        <div class="row">
+            @foreach (var a in Model.appUsers)
+            {
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="row team-2 g-0">
+                        <div class="col-xl-5 col-lg-6 col-md-12 col-sm-12">
+                            <div class="photo">
+                                @if (a.PicturePath== null)
+                                {
+                                    <img src="~/assets/img/avatar/avatar-9.png" alt="avatar-10" class="img-fluid">
+                                }
+                                else
+                                {
+                                    <img src="~/assets/img/UserPic/@a.PicturePath" alt="avatar-10" class="img-fluid">
+                                }
+                            </div>
+                        </div>
+                        <div class="col-xl-7 col-lg-6 col-md-12 col-sm-12 align-self-center">
+                            <div class="detail">
+                                <h4>
+                                    @a.FullName
+                                </h4>
+                                <h5>@a.EmployeeStatus</h5>
+                                <div class="contact">
+                                    <ul>
+                                        <li>
+                                            <i class="flaticon-mail"></i><a href="mailto:@a.Email">@a.Email</a>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-phone"></i> @a.PhoneNumber
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Our team end -->

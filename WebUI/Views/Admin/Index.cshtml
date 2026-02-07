@@ -1,0 +1,345 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model GR.Models.ViewModels.Admin.AdminHomeContentViewModel
+
+@{
+    ViewData["Title"] = "Ana Sayfa İçerik Yönetimi";
+}
+
+<h2 class="mb-4">Ana Sayfa İçerik Yönetimi</h2>
+
+<div class="container">
+
+    <div class="accordion" id="homeContentAccordion">
+
+        <!-- Banners -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingBanners">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBanners" aria-expanded="false" aria-controls="collapseBanners">
+                    Bannerlar
+                </button>
+            </h2>
+            <div id="collapseBanners" class="accordion-collapse collapse" aria-labelledby="headingBanners" data-bs-parent="#homeContentAccordion">
+                <div class="accordion-body">
+                    @if (TempData["BannerSuccess"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["BannerSuccess"]</div>
+                    }
+                    @if (TempData["BannerError"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["BannerError"]</div>
+                    }
+
+                    <div class="row g-3">
+                        @foreach (var b in Model.Banners)
+                        {
+                            <div class="col-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-lg-4 col-md-5 col-12 mb-3 mb-md-0 text-center">
+                                                <div class="border rounded" style="max-height:160px; overflow:hidden;">
+                                                    <img id="bannerPreview-@b.Id" src="@b.ImageUrl" alt="banner-@b.Id" class="img-fluid w-100" style="object-fit:cover; height:160px;" />
+                                                </div>
+                                                <small class="text-muted d-block mt-2">ID: @b.Id</small>
+                                            </div>
+                                            <div class="col-lg-8 col-md-7 col-12">
+                                                <form asp-controller="Admin" asp-action="UpdateBanner" asp-route-id="@b.Id" method="post" enctype="multipart/form-data" class="row gx-2 gy-2">
+                                                    @Html.AntiForgeryToken()
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Başlık</label>
+                                                        <input name="Title" class="form-control" value="@b.Title" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Buton Yazısı</label>
+                                                        <input name="btnText" class="form-control" value="@b.btnText" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="form-label">Açıklama</label>
+                                                        <input name="Description" class="form-control" value="@b.Description" />
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label class="form-label">Buton Linki</label>
+                                                        <input name="btnLink" class="form-control" value="@b.btnLink" />
+                                                    </div>
+                                                    <div class="col-md-4 d-flex align-items-end">
+                                                        <div class="w-100">
+                                                            <label class="form-label">Yeni Görsel (opsiyonel)</label>
+                                                            <input type="file" name="ImageFile" class="form-control form-control-sm banner-file-input" data-preview="#bannerPreview-@b.Id" accept="image/*" />
+                                                            <small class="text-muted file-name d-block mt-1" data-target="#bannerPreview-@b.Id"></small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 text-end mt-2">
+                                                        <button class="btn btn-primary btn-sm" type="submit">Güncelle</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Sections -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSections">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSections" aria-expanded="false" aria-controls="collapseSections">
+                    Hizmet Bölümleri (Sections)
+                </button>
+            </h2>
+            <div id="collapseSections" class="accordion-collapse collapse" aria-labelledby="headingSections" data-bs-parent="#homeContentAccordion">
+                <div class="accordion-body">
+                    @if (TempData["SectionSuccess"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SectionSuccess"]</div>
+                    }
+                    <div class="row g-3">
+                        @foreach (var s in Model.Sections)
+                        {
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <form asp-controller="Admin" asp-action="UpdateSection" asp-route-id="@s.Id" method="post" class="row gx-2 gy-2">
+                                            @Html.AntiForgeryToken()
+                                            <div class="col-12">
+                                                <label class="form-label">Başlık</label>
+                                                <input name="Title" class="form-control" value="@s.Title" />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Açıklama</label>
+                                                <textarea name="Description" class="form-control" rows="3">@s.Description</textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Buton Yazısı</label>
+                                                <input name="btnText" class="form-control" value="@s.btnText" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Buton Linki</label>
+                                                <input name="btnLink" class="form-control" value="@s.btnLink" />
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button class="btn btn-primary btn-sm" type="submit">Güncelle</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Contact -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingContact">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContact" aria-expanded="false" aria-controls="collapseContact">
+                    İletişim (Home Contact)
+                </button>
+            </h2>
+            <div id="collapseContact" class="accordion-collapse collapse" aria-labelledby="headingContact" data-bs-parent="#homeContentAccordion">
+                <div class="accordion-body">
+                    @if (TempData["ContactSuccess"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["ContactSuccess"]</div>
+                    }
+                    <div class="card">
+                        <div class="card-body">
+                            <form asp-controller="Admin" asp-action="UpdateContact" method="post" class="row gx-2 gy-2">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.HomeContact.Id" />
+                                <div class="col-12">
+                                    <label class="form-label">Başlık</label>
+                                    <input name="Title" class="form-control" value="@Model.HomeContact.Title" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Açıklama</label>
+                                    <textarea name="Description" class="form-control" rows="3">@Model.HomeContact.Description</textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Başlık 2</label>
+                                    <input name="Title2" class="form-control" value="@Model.HomeContact.Title2" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Başlık 3</label>
+                                    <input name="title3" class="form-control" value="@Model.HomeContact.title3" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Açıklama 2</label>
+                                    <textarea name="Description2" class="form-control" rows="2">@Model.HomeContact.Description2</textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Açıklama 3</label>
+                                    <textarea name="Description3" class="form-control" rows="2">@Model.HomeContact.Description3</textarea>
+                                </div>
+                                <div class="col-12 text-end mt-2">
+                                    <button class="btn btn-primary btn-sm" type="submit">Güncelle</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Counters -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingCounters">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCounters" aria-expanded="false" aria-controls="collapseCounters">
+                    Sayaçlar (Counters)
+                </button>
+            </h2>
+            <div id="collapseCounters" class="accordion-collapse collapse" aria-labelledby="headingCounters" data-bs-parent="#homeContentAccordion">
+                <div class="accordion-body">
+                    @if (TempData["CounterSuccess"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["CounterSuccess"]</div>
+                    }
+                    <div class="card">
+                        <div class="card-body">
+                            <form asp-controller="Admin" asp-action="UpdateCounter" method="post" class="row gx-2 gy-2">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.HomeCounter.Id" />
+                                <div class="col-md-3">
+                                    <label class="form-label">Count1</label>
+                                    <input name="Count1" class="form-control" value="@Model.HomeCounter.Count1" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Description1</label>
+                                    <input name="Description1" class="form-control" value="@Model.HomeCounter.Description1" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Count2</label>
+                                    <input name="Count2" class="form-control" value="@Model.HomeCounter.Count2" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Description2</label>
+                                    <input name="Description2" class="form-control" value="@Model.HomeCounter.Description2" />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Count3</label>
+                                    <input name="Count3" class="form-control" value="@Model.HomeCounter.Count3" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Description3</label>
+                                    <input name="Description3" class="form-control" value="@Model.HomeCounter.Description3" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Count4</label>
+                                    <input name="Count4" class="form-control" value="@Model.HomeCounter.Count4" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Description4</label>
+                                    <input name="Description4" class="form-control" value="@Model.HomeCounter.Description4" />
+                                </div>
+
+                                <div class="col-12 text-end mt-2">
+                                    <button class="btn btn-primary btn-sm" type="submit">Güncelle</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Reviews -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingReviews">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReviews" aria-expanded="false" aria-controls="collapseReviews">
+                    Müşteri Yorumları
+                </button>
+            </h2>
+            <div id="collapseReviews" class="accordion-collapse collapse" aria-labelledby="headingReviews" data-bs-parent="#homeContentAccordion">
+                <div class="accordion-body">
+                    @if (TempData["ReviewSuccess"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["ReviewSuccess"]</div>
+                    }
+
+                    <div class="row g-3">
+                        @foreach (var r in Model.CustomerReviews)
+                        {
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <form asp-controller="Admin" asp-action="UpdateReview" asp-route-id="@r.Id" method="post" class="row gx-2 gy-2">
+                                            @Html.AntiForgeryToken()
+                                            <div class="col-md-6">
+                                                <label class="form-label">İsim</label>
+                                                <input name="Name" class="form-control" value="@r.Name" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Soyisim</label>
+                                                <input name="Surname" class="form-control" value="@r.Surname" />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">İşlem Türü</label>
+                                                <input name="TransactionType" class="form-control" value="@r.TransactionType" />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Yorum</label>
+                                                <textarea name="Comment" class="form-control" rows="3">@r.Comment</textarea>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Rating (1-5)</label>
+                                                <input type="number" min="1" max="5" step="0.5" name="Rating" class="form-control" value="@r.Rating" />
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button class="btn btn-primary btn-sm" type="submit">Güncelle</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section ScriptsVl {
+    <script>
+        (function () {
+            // File input: show filename and preview (image) if available
+            document.querySelectorAll('.banner-file-input').forEach(function (input) {
+                input.addEventListener('change', function (e) {
+                    var file = input.files && input.files[0];
+                    var previewSelector = input.getAttribute('data-preview');
+                    var previewEl = previewSelector ? document.querySelector(previewSelector) : null;
+                    var fileNameEl = input.parentElement.querySelector('.file-name');
+
+                    if (fileNameEl) fileNameEl.textContent = file ? file.name : '';
+
+                    if (file && previewEl && file.type.startsWith('image/')) {
+                        var reader = new FileReader();
+                        reader.onload = function (evt) {
+                            previewEl.src = evt.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+
+            // Küçük: accordion ilk açıldığında içindeki inputları görünür yap
+            var acc = document.getElementById('homeContentAccordion');
+            if (acc) {
+                acc.addEventListener('shown.bs.collapse', function (e) {
+                    var autofocus = e.target.querySelector('input, textarea, select');
+                    if (autofocus) autofocus.focus();
+                });
+            }
+        })();
+    </script>
+}

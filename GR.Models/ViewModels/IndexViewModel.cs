@@ -1,4 +1,5 @@
-﻿using GR.Models.DTOs;
+﻿using GR.Core.Entities.Identity;
+using GR.Models.DTOs;
 using GR.Models.DTOs.FrontendDTOs;
 using GR.Models.DTOs.FrontendDTOs.HomeDTOs;
 using GR.Models.Entities;
@@ -21,5 +22,6 @@ namespace GR.Models.ViewModels
         public HomeContactDTO? HomeContact;
         public HomeCounterDTO? HomeCounter;
         public List<CustomerReviewDTO>? CustomerReviews;
+        public List<AppUser>? Users;
     }
 }

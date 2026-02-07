@@ -1,0 +1,277 @@
+﻿@model int
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Fotoğraf Yönetimi";
+    var propTitle = (string?)ViewBag.PropertyTitle ?? "";
+    var maxCount = (int)(ViewBag.MaxCount ?? 20);
+}
+
+<h3 class="mb-3">
+    Fotoğraf Yönetimi <small class="text-muted">(@propTitle)</small>
+</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-controller="Property" asp-action="Edit" asp-route-id="@Model" class="btn btn-outline-secondary">
+        <i class="fa fa-arrow-left"></i> İlana Dön
+    </a>
+    <div id="photo-count" class="text-muted">0 / @maxCount</div>
+</div>
+
+@Html.AntiForgeryToken()
+
+<!-- Dropzone -->
+<div id="dropzone" class="dropzone mb-3">
+    <div class="dz-inner">
+        <i class="fa fa-cloud-upload fa-2x mb-2" style="color:black!important"></i>
+        <div class="fw-semibold" style="color:black!important">Dosyaları buraya sürükleyip bırakın</div>
+        <div class="text-muted">veya</div>
+        <button id="btn-browse" class="btn btn-primary mt-2" type="button">Bilgisayardan Seç</button>
+        <div class="small text-muted mt-2">JPG / PNG / WebP – Maks. 10MB – En fazla @maxCount fotoğraf</div>
+    </div>
+    <input type="file" id="file-input" multiple accept="image/*" hidden />
+</div>
+
+<!-- Grid -->
+<div id="grid" class="photo-grid"></div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toast" class="toast text-bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div id="toast-body" class="toast-body"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        (() => {
+          // Güvenli literal üretimi (int/string fark etmez)
+          const propertyId = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+          const MAX = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.MaxCount ?? 20));
+
+          const grid = document.getElementById('grid');
+          const drop = document.getElementById('dropzone');
+          const browseBtn = document.getElementById('btn-browse');
+          const fileInput = document.getElementById('file-input');
+          const countEl = document.getElementById('photo-count');
+
+          // Anti-forgery token
+          const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+          // Toast helpers
+          const toastEl = document.getElementById('toast');
+          const toastBody = document.getElementById('toast-body');
+          const bsToast = new bootstrap.Toast(toastEl);
+          const showToast = (m) => { toastBody.textContent = m; bsToast.show(); };
+
+          const urls = {
+            list:    `/properties/${propertyId}/photos/list`,
+            upload:  `/properties/${propertyId}/photos/upload`,
+            cover:   `/properties/${propertyId}/photos/cover`,
+            delete:  `/properties/${propertyId}/photos/delete`,
+          };
+
+          function updateCount(){
+            const n = grid.querySelectorAll('.photo-card').length;
+            countEl.textContent = `${n} / ${MAX}`;
+          }
+
+          function cardTemplate(item, isUploading=false){
+            const card = document.createElement('div');
+            card.className = 'photo-card';
+            if (item?.id) card.dataset.id = item.id;
+            card.dataset.isCover = item?.isCover ? 'true' : 'false';
+
+            const img = document.createElement('img');
+            img.src = item?.url ?? item?.previewUrl ?? '';
+            img.alt = 'photo';
+            card.appendChild(img);
+
+            if (item?.isCover){
+              const rib = document.createElement('div');
+              rib.className = 'badge-ribbon';
+              rib.textContent = 'ANASAYFA';
+              card.appendChild(rib);
+            }
+
+            const actions = document.createElement('div');
+            actions.className = 'card-actions';
+
+            // Left actions
+            const left = document.createElement('div');
+            const coverBtn = document.createElement('button');
+            coverBtn.className = 'btn btn-sm btn-success';
+            coverBtn.innerHTML = '<i class="fa fa-star"></i> Ana Sayfa Yap';
+            coverBtn.addEventListener('click', () => setCover(card.dataset.id));
+            if (item?.isCover) coverBtn.style.display = 'none';
+            left.appendChild(coverBtn);
+
+            // Right actions
+            const right = document.createElement('div');
+            const delBtn = document.createElement('button');
+            delBtn.className = 'btn btn-sm btn-danger';
+            delBtn.innerHTML = '<i class="fa fa-trash"></i> Sil';
+            delBtn.addEventListener('click', () => deletePhoto(card.dataset.id));
+            if (item?.isCover) { delBtn.disabled = true; delBtn.title = 'Kapak fotoğrafı silinemez.'; }
+            right.appendChild(delBtn);
+
+            actions.appendChild(left);
+            actions.appendChild(right);
+            card.appendChild(actions);
+
+            // Upload sırasında tuşları geçici kilitle
+            if (isUploading){
+              coverBtn.disabled = true; delBtn.disabled = true;
+
+              const overlay = document.createElement('div');
+              overlay.className = 'progress-overlay';
+              overlay.innerHTML = '<div class="bar"><div></div></div>';
+              card.appendChild(overlay);
+              card._progressBar = overlay.querySelector('.bar > div');
+            }
+
+            return card;
+          }
+
+          async function loadExisting(){
+            try{
+              const res = await fetch(urls.list, { credentials: 'same-origin' });
+              if (!res.ok) throw new Error(await res.text());
+              const items = await res.json();
+              grid.innerHTML = '';
+              items.forEach(x => grid.appendChild(cardTemplate({ id:x.id, url:x.url, isCover:x.isCover })));
+              updateCount();
+            } catch(err){
+              showToast(err.message || 'Fotoğraflar yüklenemedi.');
+            }
+          }
+
+          async function setCover(id){
+            if (!id) return;
+            try{
+              const fd = new FormData();
+              fd.append('photoId', id);
+              fd.append('__RequestVerificationToken', token);
+
+              const res = await fetch(urls.cover, { method: 'POST', body: fd, credentials: 'same-origin' });
+              if (!res.ok) throw new Error(await res.text());
+
+              // UI güncelle
+              grid.querySelectorAll('.photo-card').forEach(c => {
+                c.dataset.isCover = 'false';
+                const rib = c.querySelector('.badge-ribbon'); if (rib) rib.remove();
+                const del = c.querySelector('.btn-outline-danger'); if (del){ del.disabled = false; del.title = ''; }
+                const cov = c.querySelector('.btn-outline-success'); if (cov){ cov.style.display = ''; }
+              });
+
+              const newCover = grid.querySelector(`.photo-card[data-id="${id}"]`);
+              if (newCover){
+                newCover.dataset.isCover = 'true';
+                const rib = document.createElement('div'); rib.className='badge-ribbon'; rib.textContent='ANASAYFA';
+                newCover.appendChild(rib);
+                const del = newCover.querySelector('.btn-outline-danger'); if (del){ del.disabled = true; del.title='Kapak fotoğrafı silinemez.'; }
+                const cov = newCover.querySelector('.btn-outline-success'); if (cov){ cov.style.display = 'none'; }
+              }
+            } catch(err){
+              showToast(err.message || 'İşlem başarısız.');
+            }
+          }
+
+          async function deletePhoto(id){
+            if (!id) return;
+            if (!confirm('Bu fotoğrafı silmek istiyor musunuz?')) return;
+            try{
+              const fd = new FormData();
+              fd.append('photoId', id);
+              fd.append('__RequestVerificationToken', token);
+
+              const res = await fetch(urls.delete, { method: 'POST', body: fd, credentials: 'same-origin' });
+              if (!res.ok) throw new Error(await res.text());
+
+              const c = grid.querySelector(`.photo-card[data-id="${id}"]`);
+              if (c) c.remove();
+              updateCount();
+            } catch(err){
+              showToast(err.message || 'Silme başarısız.');
+            }
+          }
+
+          function uploadFiles(files){
+            const current = grid.querySelectorAll('.photo-card').length;
+            const space = MAX - current;
+            if (space <= 0){ showToast('Maksimum sayıya ulaşıldı.'); return; }
+
+            Array.from(files).slice(0, space).forEach(file => {
+              if (!file.type.startsWith('image/')){ showToast('Sadece resim yüklenebilir.'); return; }
+              if (file.size > 10*1024*1024){ showToast(`${file.name}: Maksimum 10MB`); return; }
+
+              // Önizleme kartı
+              const preview = { previewUrl: URL.createObjectURL(file) };
+              const card = cardTemplate(preview, true);
+              grid.prepend(card); updateCount();
+
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', urls.upload, true);
+              xhr.withCredentials = true; // CSRF cookie vs.
+              const form = new FormData();
+              form.append('__RequestVerificationToken', token);
+              form.append('file', file, file.name);
+
+              xhr.upload.onprogress = (e) => {
+                if (!e.lengthComputable) return;
+                if (card._progressBar) card._progressBar.style.width = (e.loaded/e.total*100) + '%';
+              };
+              xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4){
+                  // overlay kalksın & butonlar açılsın
+                  const overlay = card.querySelector('.progress-overlay'); if (overlay) overlay.remove();
+                  const cov = card.querySelector('.btn-outline-success'); const del = card.querySelector('.btn-outline-danger');
+                  if (cov) cov.disabled = false; if (del) del.disabled = false;
+
+                  if (xhr.status >= 200 && xhr.status < 300){
+                    try {
+                      const r = JSON.parse(xhr.responseText);
+                      card.dataset.id = r.id;
+                      card.querySelector('img').src = r.url;
+                      if (r.isCover){
+                        card.dataset.isCover = 'true';
+                        const rib = document.createElement('div'); rib.className='badge-ribbon'; rib.textContent='ANASAYFA';
+                        card.appendChild(rib);
+                        if (del){ del.disabled = true; del.title = 'Kapak fotoğrafı silinemez.'; }
+                        if (cov){ cov.style.display = 'none'; }
+                      }
+                    } catch(parseErr){
+                      card.remove(); updateCount();
+                      showToast('Beklenmeyen yanıt.');
+                    }
+                  } else {
+                    card.remove(); updateCount();
+                    showToast(xhr.responseText || 'Yükleme başarısız.');
+                  }
+                }
+              };
+              xhr.send(form);
+            });
+          }
+
+          // Drag & drop
+          ['dragenter','dragover'].forEach(evt =>
+            drop.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); drop.classList.add('dragover'); })
+          );
+          ['dragleave','drop'].forEach(evt =>
+            drop.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); drop.classList.remove('dragover'); })
+          );
+          drop.addEventListener('drop', e => uploadFiles(e.dataTransfer.files));
+
+          // Browse
+          browseBtn.addEventListener('click', () => fileInput.click());
+          fileInput.addEventListener('change', () => { uploadFiles(fileInput.files); fileInput.value=''; });
+
+          // Başlat
+          loadExisting();
+        })();
+    </script>
+}

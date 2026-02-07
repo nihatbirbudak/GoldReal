@@ -24,10 +24,10 @@ $(function () {
         }
 
         if($("#map").length > 0) {
-            var latitude = 51.541216;
-            var longitude = -0.095678;
+            var latitude = 38.5981535643047;
+            var longitude = 26.933185276392017;
             var layout = $('#map').attr('data-map');
-            var providerName = 'OpenStreetMap';
+            var providerName = 'google';
             generateMap(latitude, longitude, providerName, layout);
         }
 

@@ -1,0 +1,25 @@
+﻿<div class="dashboard-nav">
+    <div class="dashboard-inner">
+        <h4>Ana</h4>
+        <ul>
+            <li class="@Html.IsActive("Admin", "Index")"><a asp-controller="Admin" asp-action="Index"><i class="flaticon-dashboard"></i> Ana Sayfa</a></li>
+            <li class="@Html.IsActive("Admin", "Messages")"><a asp-action="Messages" asp-controller="Admin"><i class="flaticon-mail"></i> Mesajlar</a></li>
+            <auth roles="Admin">
+                <li class="@Html.IsActive("Admin", "Users")"><a asp-controller="Admin" asp-action="Users"><i class="flaticon-male"></i> Kullanıcılar</a></li>
+            </auth>
+        </ul>
+        <h4>Listeler</h4>
+        <ul>
+            <auth roles="Admin">
+                <li class="@Html.IsActive("Property", "ListAll")"><a asp-controller="Property" asp-action="ListAll"><i class="flaticon-empire-state-building"></i>Tüm Portföyler</a></li>
+            </auth>
+            <li class="@Html.IsActive("Property", "List")"><a asp-controller="Property" asp-action="List"><i class="flaticon-bill"></i>Portföylerim</a></li> 
+            <li class="@Html.IsActive("Admin", "AddProperty")"><a asp-controller="Property" asp-action="Add"><i class="flaticon-plus"></i>Portföy Ekle</a></li>
+        </ul>
+        <h4>Hesap</h4>
+        <ul>
+            <li class="@Html.IsActive("Admin", "Profile")"><a asp-controller="Admin" asp-action="Profile"><i class="flaticon-male"></i>Profil</a></li>
+            <li class="@Html.IsActive("Auth", "Logout")"><a asp-controller="Auth" asp-action="logout"><i class="flaticon-logout"></i>Çıkış Yap</a></li>
+        </ul>
+    </div>
+</div>

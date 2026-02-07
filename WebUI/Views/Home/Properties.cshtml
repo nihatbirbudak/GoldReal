@@ -1,0 +1,150 @@
+﻿@model PropertyListViewModel
+@{
+    var q = Model.Query;
+    var current = Model.CurrentPage <= 0 ? 1 : Model.CurrentPage;
+    var total = Model.TotalPages <= 0 ? 1 : Model.TotalPages;
+
+    Func<int, string> pageUrl = p => Url.Action("Properties", new
+    {
+        page = p,
+        pageSize = Model.PageSize,
+        q.OwnerId,
+        q.IsActive,
+        q.IsSold,
+        q.MinPrice,
+        q.MaxPrice,
+        q.CityId,
+        q.DistrictId,
+        q.NeighborhoodId,
+        q.CategoryId,
+        q.TransactionTypeId,
+        q.Search,
+        q.SortBy,
+        q.SortDir
+    });
+}
+<!-- Properties section body start -->
+<div class="properties-section-body content-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-xs-12">
+
+                <!-- Option bar -->
+                <div class="option-bar">
+                    <div class="row">
+                        <div class="col-lg-6 col-8">
+                            <div class="sorting-options2">
+                                <span class="sort">Filitre:</span>
+                                <form id="sortForm" method="get" action="@Url.Action("Properties")">
+                                    <input type="hidden" name="OwnerId" value="@q.OwnerId" />
+                                    <input type="hidden" name="IsActive" value="@(q.IsActive?.ToString().ToLower())" />
+                                    <input type="hidden" name="IsSold" value="@(q.IsSold?.ToString().ToLower())" />
+                                    <input type="hidden" name="MinPrice" value="@q.MinPrice" />
+                                    <input type="hidden" name="MaxPrice" value="@q.MaxPrice" />
+                                    <input type="hidden" name="CityId" value="@q.CityId" />
+                                    <input type="hidden" name="DistrictId" value="@q.DistrictId" />
+                                    <input type="hidden" name="NeighborhoodId" value="@q.NeighborhoodId" />
+                                    <input type="hidden" name="CategoryId" value="@q.CategoryId" />
+                                    <input type="hidden" name="TransactionTypeId" value="@q.TransactionTypeId" />
+                                    <input type="hidden" name="Search" value="@q.Search" />
+                                    <input type="hidden" name="page" value="1" />
+                                    <input type="hidden" name="pageSize" value="@Model.PageSize" />
+
+                                    <select class="selectpicker search-fields" name="SortBy" id="SortBy">
+                                        <option value="CreatedAt" selected="@(q.SortBy == PropertySortBy.CreatedAt)">En Yeniden Eskiye</option>
+                                        <option value="Price" selected="@(q.SortBy == PropertySortBy.Price)">Fiyat</option>
+                                        <option value="Title" selected="@(q.SortBy == PropertySortBy.Title)">Başlık</option>
+                                    </select>
+
+                                    <select class="selectpicker search-fields" name="SortDir" id="SortDir">
+                                        <option value="Desc" selected="@(q.SortDir == SortDir.Desc)">Azalan</option>
+                                        <option value="Asc" selected="@(q.SortDir == SortDir.Asc)">Artan</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-4">
+                            <div class="sorting-options">
+                                <a href="#" class="change-view-btn active-view-btn"><i class="fa fa-th-large"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- grid properties -->
+                <div class="row">
+                    @if (Model.Properties != null && Model.Properties.Any())
+                    {
+                        foreach (var p in Model.Properties)
+                        {
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div class="property-box-3">
+                                    <div class="property-label">@p.TransactionTypeName</div> 
+                                    @if (Model.Photos == null || Model.Photos.FirstOrDefault(x => x.PropertyId == p.Id && x.IsCover) == null)
+                                    {
+                                        <img src="~/assets/img/properties/properties-1.png" alt="photo" class="img-fluid w-100" />
+                                    }
+                                    else
+                                    {
+                                        var cover = Model.Photos.FirstOrDefault(x => x.PropertyId == p.Id && x.IsCover);
+                                        <img src="@Url.Content("~/" + cover!.Url.TrimStart('~', '/'))" alt="photo" class="img-fluid w-100" />
+                                    }
+
+                                    <div class="ling-section">
+                                        <h3>
+                                            <a href="@Url.Action("Details", "Properties", new { id = p.Id })">@p.Title</a>
+                                        </h3>
+                                        <ul class="member-socials clearfix">
+                                            <li><i class="flaticon-area"></i> @p.GrossM2 m²</li>
+                                            <li><i class="flaticon-pin"></i> @p.CityName / @p.DistrictName</li>
+                                            <li><i class="flaticon-tag"></i> @p.Price.ToString("N0") @p.Currency</li>
+                                        </ul>
+                                        <a href="@Url.Action("PropertyDetails", "Home", new { id = p.Id })" class="read-more-btn">İncele</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <div class="alert alert-info">Kriterlerinize uygun ilan bulunamadı.</div>
+                        </div>
+                    }
+                </div>
+
+                <!-- pagination -->
+                <div class="pagination-box hidden-mb-45 text-center">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @(current <= 1 ? "disabled" : "")">
+                                <a class="page-link" href="@(current <= 1 ? "#" : pageUrl(current - 1))">Geri</a>
+                            </li>
+                            @for (int i = 1; i <= total; i++)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link @(i == current ? "active" : "")"
+                                       href="@(i == current ? "#" : pageUrl(i))">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(current >= total ? "disabled" : "")">
+                                <a class="page-link" href="@(current >= total ? "#" : pageUrl(current + 1))">İleri</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Properties section body end -->
+@section Scripts {
+    <script>
+        document.addEventListener('change', function (e) {
+          if (e.target && (e.target.id === 'SortBy' || e.target.id === 'SortDir')) {
+            document.getElementById('sortForm').submit();
+          }
+        });
+    </script>
+}

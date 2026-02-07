@@ -3,6 +3,7 @@ using GR.Models.Entities;
 using GR.Models.Entities.Home_Entities;
 using GR.Services.Abstract;
 using GR.Services.Abstract.HomeService;
+using GR.Services.Abstract.PropertyServiceFolder;
 using GR.Services.Services.Home_Service;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -22,6 +23,10 @@ namespace GR.Services.SeedData
             {
                 await roleManager.CreateAsync(new AppRole { Name = "Admin" });
             }
+            if (!await roleManager.RoleExistsAsync("User"))
+            {
+                await roleManager.CreateAsync(new AppRole { Name = "User" });
+            }
         }
 
         // Seed data for users
@@ -30,7 +35,7 @@ namespace GR.Services.SeedData
             var hasUser = userManager.Users.ToList();
             if (!hasUser.Any())
             {
-                await userManager.CreateAsync(new AppUser() { Email = "admin@gurdemirinsaat.com", UserName = "Admin" }, "Admin.1234");
+                await userManager.CreateAsync(new AppUser() { Email = "admin@goldreal.com", UserName = "Admin" , FullName = "Admin"}, "Admin.1234");
                 var user = await userManager.FindByNameAsync("Admin");
                 await userManager.AddToRoleAsync(user!, "Admin");
             }
@@ -194,6 +199,32 @@ namespace GR.Services.SeedData
                     Comment = "Yatırım amaçlı arsa alırken bana çok yardımcı oldular. Tüm prosedürleri detaylıca anlattılar ve doğru yönlendirdiler. Gözüm kapalı tavsiye ederim.",
                     Rating = 4
                 });
+            }
+        }
+
+        public static async Task AddPropertyCategory(IPropertyCategoryService propertyCategoryService)
+        {
+            var categories = await propertyCategoryService.GetAllAsync();
+            if (!categories.Any())
+            {
+                await propertyCategoryService.AddAsync(new Models.Entities.Property.PropertyCategory { Name = "Konut" });
+                await propertyCategoryService.AddAsync(new Models.Entities.Property.PropertyCategory { Name = "İş Yeri" });
+                await propertyCategoryService.AddAsync(new Models.Entities.Property.PropertyCategory { Name = "Arsa" });
+                await propertyCategoryService.AddAsync(new Models.Entities.Property.PropertyCategory { Name = "Bina" });
+                await propertyCategoryService.AddAsync(new Models.Entities.Property.PropertyCategory { Name = "Devre Mülk" });
+                await propertyCategoryService.AddAsync(new Models.Entities.Property.PropertyCategory { Name = "Turistik Tesis" });
+            }
+        }
+
+        public static async Task AddTransactionType(ITransactionTypeService transactionTypeService)
+        {
+            var types = await transactionTypeService.GetAllAsync();
+            if (!types.Any())
+            {
+                await transactionTypeService.AddAsync(new Models.Entities.Property.TransactionType { Name = "Satılık" });
+                await transactionTypeService.AddAsync(new Models.Entities.Property.TransactionType { Name = "Kiralık" });
+                await transactionTypeService.AddAsync(new Models.Entities.Property.TransactionType { Name = "Günlük Kiralık" });
+                await transactionTypeService.AddAsync(new Models.Entities.Property.TransactionType { Name = "Devren Kiralık" });
             }
         }
     }

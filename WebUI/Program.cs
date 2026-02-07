@@ -4,12 +4,14 @@ using GR.Infrastructure.Data;
 using GR.Infrastructure.Repositories;
 using GR.Services.Abstract;
 using GR.Services.Abstract.HomeService;
+using GR.Services.Abstract.PropertyServiceFolder;
 using GR.Services.Base;
 using GR.Services.Mapping;
 using GR.Services.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using WebUI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,10 +28,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     {
         options.MigrationsAssembly("GR.Infrastructure");
     });
-    options.EnableSensitiveDataLogging();
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+    }
 });
 
-builder.Services.AddIdentity<AppUser, AppRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
+// Identity ayarlarý (Password, Lockout vb.) StartUpExtensions üzerinden
+builder.Services.AddIdentityWithExt();
 builder.Services.AddScoped<DbContext, AppDbContext>();
 
 //****************    Database Connetion End   ***************************************************
@@ -47,13 +53,15 @@ builder.Services.ConfigureApplicationCookie(opt =>
     var cookieBuilder = new CookieBuilder();
 
     cookieBuilder.Name = "AppCookie";
-    opt.LoginPath = new PathString("/Admin/Auth/SingIn");
-    opt.LogoutPath = new PathString("/Admin/Auth/logout");
-    opt.AccessDeniedPath = new PathString("/Admin/Pages/Error500");
+    opt.LoginPath = "/Auth/SingIn";
+    opt.LogoutPath = "/Auth/Logout";
+    opt.AccessDeniedPath = "/Auth/AccessDenied";
+    opt.ReturnUrlParameter = "returnUrl";
     opt.Cookie = cookieBuilder;
     opt.ExpireTimeSpan = TimeSpan.FromDays(1);
     opt.SlidingExpiration = true;
 });
+
 
 
 
@@ -91,6 +99,12 @@ using (var scope = app.Services.CreateScope())
         // Seed Customer Reviews
         var customerReviewService = services.GetRequiredService<ICustomerReviewService>();
         await Seeder.AddCustomerReviews(customerReviewService);
+        // Seed Property Categories
+        var propertyCategoryService = services.GetRequiredService<IPropertyCategoryService>();
+        await Seeder.AddPropertyCategory(propertyCategoryService);
+        // Seed Transaction Types
+        var transactionTypeService = services.GetRequiredService<ITransactionTypeService>();
+        await Seeder.AddTransactionType(transactionTypeService);
     }
     catch (Exception ex)
     {
@@ -113,6 +127,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var counter = 1;
+}
+@model UserListViewModel
+<h2 class="float-start">Kullanıcılar</h2>
+<a asp-controller="Admin" asp-action="AddUser" class="btn btn-outline-primary float-end"><i class="fa fa-plus"></i> Kullanıcı Ekle</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Ad</th>
+            <th scope="col">Soyad</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Düzenle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users!)
+        {
+            <tr>
+                <th scope="row">@counter</th>
+                <td scope="row">@user.FullName</td>
+                <td>@user.Email</td>
+                <td>
+                    <user-role-names user-id="@user.Id"></user-role-names>
+                </td>
+                <td>
+                    @if (user.IsActive)
+                    {
+                        <a class="text-danger" asp-controller="Admin" asp-action="ActiveUser" asp-route-id="@user.Id"><i class="fa fa-eye"></i> Pasif Yap</a>
+                    }
+                    else
+                    {
+                        <a class="text-success" asp-controller="Admin" asp-action="ActiveUser" asp-route-id="@user.Id"><i class="fa fa-eye"></i> Aktif Yap</a>
+                    }
+                    <a asp-controller="Admin" asp-action="UpdateUser" asp-route-id="@user.Id"><i class="fa fa-pencil"></i> Düzenle</a>
+                    @if (User.Claims.ToList().FirstOrDefault(x => x.Type == "FullName")!.Value != user.FullName)
+                    {
+                        <a asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@user.Id" class="delete"><i class="fa fa-remove"></i> Sil</a>
+                    }
+                </td>
+            </tr>
+            counter +=1;
+        }
+    </tbody>
+</table>

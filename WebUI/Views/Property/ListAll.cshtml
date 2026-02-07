@@ -1,0 +1,100 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var current = Model.CurrentPage <= 0 ? 1 : Model.CurrentPage;
+    var total = Model.TotalPages <= 0 ? 1 : Model.TotalPages;
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+
+    // Mevcut action'ı koru (List veya ListAll hangisindeysen)
+    Func<int, string> pageUrl = p => Url.Action(null, new { page = p });
+}
+@model PropertyListViewModel
+
+<div class="dashboard-list">
+    <h3>Porföylerim</h3>
+    <table class="manage-table">
+        <tbody>
+            @if (Model.Properties!.Any())
+            {
+                @foreach (var p in Model.Properties!)
+                {
+                    <tr class="responsive-table">
+                        <td class="listing-photoo">
+                            @if (Model.Photos!.FirstOrDefault(x => x.PropertyId == p.Id) == null)
+                            {
+                                <img src="~/assets/img/properties/properties-1.png" alt="listing-photo" class="img-fluid">
+                            }
+                            else
+                            {
+                                <img src="@Model.Photos.FirstOrDefault(x => x.PropertyId == p.Id).Url" alt="listing-photo" class="img-fluid">
+
+                            }
+
+                        </td>
+                        <td class="title-container">
+                            <h2><a href="#">@p.Title</a></h2>
+                            <h5><i class="flaticon-pin"></i> @p.AddressLine @(p.NeighborhoodName ?? ""), @(p.CityName ?? "")/@(p.DistrictName ?? "") </h5>
+                            <h6 class="table-property-price">@(p.Price.ToString("N0")) @p.Currency</h6>
+                            <h6 class="table-property-price">@(p.ownerFullName)</h6>
+                        </td>
+                        <td class="expire-date">@p.CreatedAt.ToString("dd.MM.yyyy")</td>
+                        <td class="action">
+                            <a asp-controller="Property" asp-action="Edit" asp-route-id="@p.Id"> <i class="fa fa-pencil"></i> Düzenle</a>
+                            @if (p.IsActive)
+                            {
+                                <a asp-controller="Property" asp-action="IsActive" asp-route-id="@p.Id" asp-route-returnUrl="@returnUrl"><i class="fa  fa-eye "></i> Pasif Yap</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Property" asp-action="IsActive" asp-route-id="@p.Id" asp-route-returnUrl="@returnUrl"><i class="fa  fa-eye link-danger"></i> Aktif Yap</a>
+                            }
+                            <a asp-controller="Property" asp-action="Manage" asp-route-id="@p.Id"><i class="fa  fa-image"></i> Resim Ekle</a>
+                            @if (!p.IsSold)
+                            {
+                                <a asp-controller="Property" asp-action="IsSoldListAll" asp-route-id="@p.Id"><i class="fa  fa-check-circle"></i> Satışta</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Property" asp-action="IsSoldListAll" asp-route-id="@p.Id"><i class="fa  fa-money"></i> Satıldı</a>
+
+                            }
+                            <a asp-controller="Property" asp-action="Delete" asp-route-id="@p.Id" asp-route-returnUrl="@returnUrl" onclick="return confirm('Bu ilanı silmek istediğinize emin misiniz?');" class="delete"><i class="fa fa-remove"></i> Sil</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">Henüz bir porföy eklemediniz. Eklemek için <a asp-controller="Property" asp-action="Add">buraya tıklayın</a>.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Page navigation start -->
+<div class="pagination-box hidden-mb-45 text-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+
+            <!-- Prev -->
+            <li class="page-item @(current <= 1 ? "disabled" : "")">
+                <a class="page-link" href="@(current <= 1 ? "#" : pageUrl(current - 1))">Prev</a>
+            </li>
+
+            <!-- Page numbers -->
+            @for (int i = 1; i <= total; i++)
+            {
+                <li class="page-item">
+                    <a class="page-link @(i == current ? "active" : "")"
+                       href="@(i == current ? "#" : pageUrl(i))">@i</a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(current >= total ? "disabled" : "")">
+                <a class="page-link" href="@(current >= total ? "#" : pageUrl(current + 1))">Next</a>
+            </li>
+
+        </ul>
+    </nav>
+</div>

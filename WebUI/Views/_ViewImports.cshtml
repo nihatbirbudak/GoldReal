@@ -1,9 +1,19 @@
 ﻿@using WebUI
 @using WebUI.Models
 @using GR.Models.ViewModels
+@using GR.Models.ViewModels.Auth
+@using GR.Models.ViewModels.Admin
+@using GR.Models.ViewModels.PropertyViewModelFolder
 @using GR.Models.DTOs
 @using GR.Models.DTOs.FrontendDTOs
 @using GR.Models.Entities
+@using GR.Models.Enums
 @using GR.Models.Enum
+@using WebUI.Extensions
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.IdentityModel.Tokens
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AspNetCore.ReCaptcha
+@addTagHelper *, WebUI

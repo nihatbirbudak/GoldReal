@@ -1,0 +1,262 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model PropertyAddViewModel
+
+<div class="submit-address dashboard-list">
+    <form asp-controller="Property" asp-action="Edit" method="Post">
+        <h4 class="bg-grea-3">Temel Bilgiler</h4>
+        <input hidden asp-for="Id" />
+        <div class="search-contents-sidebar">
+            <div class="row pad-20">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-group propertytitle">
+                        <label asp-for="Title" class="form-label">Portföy Başlığı</label>
+                        <input type="text" asp-for="Title" class="form-control" placeholder="Başlık">
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label asp-for="CategoryId">Kategori</label>
+                        <select asp-for="CategoryId" class="selectpicker search-fields" required>
+                            <option disabled selected>Seçiniz</option>
+                            @foreach (var pc in Model.PropertyCategories!)
+                            {
+                                <option value="@pc.Id">@pc.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label asp-for="TransactionTypeId">Satatü</label>
+                        <select asp-for="TransactionTypeId" class="selectpicker search-fields" required>
+                            <option disabled selected>Seçiniz</option>
+                            @foreach (var tt in Model.TransactionTypes!)
+                            {
+                                <option value="@tt.Id">@tt.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group price">
+                        <label asp-for="Floor" class="form-label">Bulunduğu Kat</label>
+                        <input type="text" asp-for="Floor" class="form-control" placeholder="Bulunduğu Kat">
+                    </div>
+                </div><div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group price">
+                        <label asp-for="TotalFloor" class="form-label">Kat Sayısı</label>
+                        <input type="text" asp-for="TotalFloor" class="form-control" placeholder="Kat Sayısı">
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group price">
+                        <label asp-for="Age" class="form-label">Bina Yaşı</label>
+                        <input type="text" asp-for="Age" class="form-control" placeholder="Bina Yaşı">
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group price">
+                        <label asp-for="Price" class="form-label">Fiyat</label>
+                        <input type="text" asp-for="Price" class="form-control" placeholder="Fiyat">
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label asp-for="Currency">Fiyat Cinsi</label>
+                        <select asp-for="Currency" class="selectpicker search-fields" required>
+                            <option value="TRY" selected>TRY</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group area">
+                        <label asp-for="GrossM2" class="form-label">Bürüt Metrekare</label>
+                        <input type="text" asp-for="GrossM2" class="form-control" placeholder="m²">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group area">
+                        <label asp-for="NetM2" class="form-label">Net Metrekare</label>
+                        <input type="text" asp-for="NetM2" class="form-control" placeholder="m²">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <label asp-for="RoomPlan" class="form-label">Oda Sayısı</label>
+                        <input type="text" asp-for="RoomPlan" class="form-control" placeholder="ÖRN: 3+1">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <label asp-for="BathroomCount" class="form-label">Banyo Sayısı</label>
+                        <input type="text" asp-for="BathroomCount" class="form-control" placeholder="ÖRN: 1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="bg-grea-3">Adres</h4>
+        <div class="row pad-20">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group address">
+                    <label asp-for="AddressLine" class="form-label">Adres</label>
+                    <input type="text" asp-for="AddressLine" class="form-control" placeholder="Adres Sokak/Cadde Numara">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <label asp-for="Cities">İl</label>
+                    <select id="CityId" name="CityId" class="selectpicker search-fields" required>
+                        <option value="">Seçiniz</option>
+                        @foreach (var c in Model.Cities!)
+                        {
+                            if (c.Id == Model.CityId)
+                            {
+                                <option selected value="@c.Id">@c.Name</option>
+                            }else
+                            {
+                                <option value="@c.Id">@c.Name</option>
+                            }
+                        }
+                    </select>
+                    <div class="invalid-feedback">Lütfen il seçin.</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <label asp-for="Districts">İlçe</label>
+                    <select id="DistrictId" name="DistrictId" class="selectpicker search-fields" required>
+                        <option value="">@(Model.CityId.HasValue ? "Seçiniz" : "İl seçiniz")</option>
+
+                    </select>
+                    <div class="invalid-feedback">Lütfen ilçe seçin.</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <label asp-for="Neighborhoods">Mahalle</label>
+                    <select id="NeighborhoodId" name="NeighborhoodId" class="selectpicker search-fields">
+                        <option value="">@(Model.DistrictId.HasValue ? "Seçiniz" : "İlçe seçiniz")</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <h4 class="bg-grea-3">Detay Açıklama</h4>
+        <div class="row pad-20">
+            <div class="col-lg-12">
+                <div class="form-group message">
+                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Portföy Açıklaması ..."></textarea>
+                </div>
+            </div>
+        </div>
+        <h4 class="bg-grea-3">İlan Sahibi</h4>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                    <select asp-for="SelectedOwnerId" name="SelectedOwnerId"
+                            class="selectpicker form-control" data-live-search="true">
+                        <option value="@Model.Owner!.Id">@Model.Owner!.FullName</option>
+                        @foreach (var u in Model.Users!)
+                        {
+                            if (u.Id == Model.Owner!.Id) continue;
+                            <option value="@u.Id">@u.FullName</option>
+                        }
+                    </select>
+                    <small class="text-muted">Seçilmezse ilan mevcut kullanıcı adına kaydedilir.</small>
+                </div>
+            </div>
+        }
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <button type="submit" class="btn btn-md btn-theme">Kaydet</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // bootstrap-select init
+      $('.selectpicker').selectpicker();
+
+      const districtUrl = '/api/address/districts';
+      const neighborhoodUrl = '/api/address/neighborhoods';
+
+      const $citySel  = $('#CityId');
+      const $distSel  = $('#DistrictId');
+      const $neighSel = $('#NeighborhoodId');
+
+      function setOptions($sel, items, placeholder) {
+        // options'ı yeniden yaz
+        let html = `<option value="">${placeholder || 'Seçiniz'}</option>`;
+        for (const it of items) {
+          const text = it.postalCode ? `${it.name} - ${it.postalCode}` : it.name;
+          html += `<option value="${it.id}">${text}</option>`;
+        }
+        $sel.html(html);
+
+        // bootstrap-select UI'ını yenile!
+        $sel.selectpicker('refresh');
+      }
+
+      async function loadDistricts(cityId) {
+        if (!cityId) {
+          setOptions($distSel, [], 'İl seçiniz');
+          setOptions($neighSel, [], 'İlçe seçiniz');
+          return;
+        }
+        setOptions($distSel, [], 'Yükleniyor...');
+        setOptions($neighSel, [], 'İlçe seçiniz');
+
+        try {
+          const res = await fetch(`${districtUrl}?cityId=${encodeURIComponent(cityId)}`, { credentials: 'same-origin' });
+          const data = await res.json(); // [{id,name}]
+          setOptions($distSel, data, 'Seçiniz');
+        } catch (e) {
+          setOptions($distSel, [], 'Hata: ilçeler alınamadı');
+          console.error(e);
+        }
+      }
+
+      async function loadNeighborhoods(districtId) {
+        if (!districtId) {
+          setOptions($neighSel, [], 'İlçe seçiniz');
+          return;
+        }
+        setOptions($neighSel, [], 'Yükleniyor...');
+        try {
+          const res = await fetch(`${neighborhoodUrl}?districtId=${encodeURIComponent(districtId)}`, { credentials: 'same-origin' });
+          const data = await res.json(); // [{id,name,postalCode}]
+          setOptions($neighSel, data, 'Seçiniz');
+        } catch (e) {
+          setOptions($neighSel, [], 'Hata: mahalleler alınamadı');
+          console.error(e);
+        }
+      }
+
+      // Değişim olayları — bootstrap-select ile standart change çalışır
+      $citySel.on('change', () => loadDistricts($citySel.val()));
+      $distSel.on('change', () => loadNeighborhoods($distSel.val()));
+
+      // (Opsiyonel) Edit sayfasında önceden seçili değerleri tetikle
+      const selectedCityId = $('#CityId').val();
+      if (selectedCityId) {
+        loadDistricts(selectedCityId).then(() => {
+          const selectedDistrictId = '@(Model?.DistrictId ?? (int?)null)';
+          if (selectedDistrictId) {
+            $distSel.val(String(selectedDistrictId)).selectpicker('refresh');
+            loadNeighborhoods(selectedDistrictId).then(() => {
+              const selectedNeighborhoodId = '@(Model?.NeighborhoodId ?? (int?)null)';
+              if (selectedNeighborhoodId) {
+                $neighSel.val(String(selectedNeighborhoodId)).selectpicker('refresh');
+              }
+            });
+          }
+        });
+      }
+    });
+</script>

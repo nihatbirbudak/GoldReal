@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var current = Model.CurrentPage <= 0 ? 1 : Model.CurrentPage;
+    var total = Model.TotalPages <= 0 ? 1 : Model.TotalPages;
+
+    Func<int, string> pageUrl = p => Url.Action(null, new { page = p });
+}
+@model ContactRequestViewModel
+@* İlk 5 Tane listelenecek *@
+<div class="submit-address dashboard-list">
+        <h4>Mesajlar</h4>
+        <div class="row pad-20">
+            <div class="col-lg-12">
+                @if (!Model.ContactRequests.Any())
+                {
+                    <h4>Hiçbir Mesaj yok</h4>
+                }
+                else
+                {
+                    @foreach (var cr in Model.ContactRequests!)
+                    {
+                        <div class="comment d-flex">
+                            <div class="comment-content">
+                                <div class="comment-meta">
+                                    <h5>@(cr.Name + " " + cr.Surname)</h5>
+                                    <div class="comment-meta">
+                                        @cr.CreatedAt.ToString("HH:mm M/d/yyyy")<a href="">@cr.RequestType</a>
+                                    </div>
+                                </div>
+                                <p>@cr.Message</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+</div>
+
+<!-- Page navigation start -->
+<div class="pagination-box hidden-mb-45 text-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+
+            <!-- Prev -->
+            <li class="page-item @(current <= 1 ? "disabled" : "")">
+                <a class="page-link" href="@(current <= 1 ? "#" : pageUrl(current - 1))">Prev</a>
+            </li>
+
+            <!-- Page numbers -->
+            @for (int i = 1; i <= total; i++)
+            {
+                <li class="page-item">
+                    <a class="page-link @(i == current ? "active" : "")"
+                       href="@(i == current ? "#" : pageUrl(i))">@i</a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(current >= total ? "disabled" : "")">
+                <a class="page-link" href="@(current >= total ? "#" : pageUrl(current + 1))">Next</a>
+            </li>
+
+        </ul>
+    </nav>
+</div>

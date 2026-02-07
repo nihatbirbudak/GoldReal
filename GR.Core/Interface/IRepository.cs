@@ -21,5 +21,19 @@ namespace GR.Infrastructure.Repositories
             int? skip = null,
             int? take = null,
             params Expression<Func<T, object>>[] includes);
+        Task<TResult?> GetProjectedAsync<TResult>(
+        Expression<Func<T, bool>> filter,
+        Expression<Func<T, TResult>> selector,
+        params Expression<Func<T, object>>[] includes);
+
+        Task<IEnumerable<TResult>> GetAllProjectedAsync<TResult>(
+            Expression<Func<T, bool>>? filter,
+            Expression<Func<T, TResult>> selector,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            int? skip = null,
+            int? take = null,
+            params Expression<Func<T, object>>[] includes);
+
+        Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
     }
 }

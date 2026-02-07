@@ -1,4 +1,5 @@
 ﻿using GR.Core.Interface;
+using GR.Models.DTOs;
 using GR.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace GR.Services.Abstract
 {
     public interface ICustomerReviewService : IServiceBase<CustomerReview,int>
     {
+        Task<PagedResult<CustomerReview>> GetPageAsync(int page, int pageSize);
     }
 }
